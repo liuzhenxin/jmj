@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "blxhsm", "blxhsm\blxhsm.vcproj", "{BD0D3553-9B2F-4B3B-95DB-3498857878EB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "APITEST", "APITEST\APITEST.vcproj", "{84EDB356-9D1B-40D6-BA87-22BADFC56638}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BD0D3553-9B2F-4B3B-95DB-3498857878EB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BD0D3553-9B2F-4B3B-95DB-3498857878EB}.Debug|Win32.Build.0 = Debug|Win32
+		{BD0D3553-9B2F-4B3B-95DB-3498857878EB}.Release|Win32.ActiveCfg = Release|Win32
+		{BD0D3553-9B2F-4B3B-95DB-3498857878EB}.Release|Win32.Build.0 = Release|Win32
+		{84EDB356-9D1B-40D6-BA87-22BADFC56638}.Debug|Win32.ActiveCfg = Debug|Win32
+		{84EDB356-9D1B-40D6-BA87-22BADFC56638}.Debug|Win32.Build.0 = Debug|Win32
+		{84EDB356-9D1B-40D6-BA87-22BADFC56638}.Release|Win32.ActiveCfg = Release|Win32
+		{84EDB356-9D1B-40D6-BA87-22BADFC56638}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
