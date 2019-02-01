@@ -1,0 +1,26 @@
+﻿生成启动时间为 2019-02-01 16:56:24。
+     1>项目“D:\jmj\jmj\blxhsm\proj\ZERO_CHECK.vcxproj”在节点 2 上(build 个目标)。
+     1>InitializeBuildStatus:
+         正在对“Win32\Release\ZERO_CHECK\ZERO_CHECK.unsuccessfulbuild”执行 Touch 任务。
+       CustomBuild:
+         Checking Build System
+         CMake is re-running because D:/jmj/jmj/blxhsm/proj/CMakeFiles/generate.stamp is out-of-date.
+           the file 'D:/jmj/jmj/blxhsm/CMakeLists.txt'
+           is newer than 'D:/jmj/jmj/blxhsm/proj/CMakeFiles/generate.stamp.depend'
+           result='-1'
+         CMake Error at CMakeLists.txt:11 (add_subdirectory):
+           add_subdirectory not given a binary directory but the given source
+           directory "D:/jmj/jmj/Common" is not a subdirectory of "D:/jmj/jmj/blxhsm".
+           When specifying an out-of-tree source a binary directory must be explicitly
+           specified.
+         
+         
+         -- Configuring incomplete, errors occurred!
+         See also "D:/jmj/jmj/blxhsm/proj/CMakeFiles/CMakeOutput.log".
+         CMake Configure step failed.  Build files cannot be regenerated correctly.  Attempting to stop IDE build.
+     1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppCommon.targets(151,5): error MSB6006: “cmd.exe”已退出，代码为 -1073741819。
+     1>已完成生成项目“D:\jmj\jmj\blxhsm\proj\ZERO_CHECK.vcxproj”(build 个目标)的操作 - 失败。
+
+生成失败。
+
+已用时间 00:00:01.87

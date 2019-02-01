@@ -6,13 +6,13 @@ project (blxhsm)
 
 # 查找当前目录下的所有源文件
 # 并将名称保存到 src 变量
-#aux_source_directory(. src)
+aux_source_directory(. src)
+
+aux_header_directory(. header)
 
 #add_subdirectory(../Common)
 
 #aux_source_directory(../Common srcCommon)
 
 # 指定生成目标
-#add_library(blxhsm SHARED ${src} ${srcCommon}) 
-
-add_library(blxhsm SHARED sdf.cpp) 
+add_library(blxhsm SHARED ${src}) 
