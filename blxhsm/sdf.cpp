@@ -1,4 +1,4 @@
-// blxhsm.cpp : ¶¨Òå DLL Ó¦ÓÃ³ÌĞòµÄµ¼³öº¯Êı¡£
+// blxhsm.cpp : å®šä¹‰ DLL åº”ç”¨ç¨‹åºçš„å¯¼å‡ºå‡½æ•°ã€‚
 //
 #include "sdf.h"
 //#include "SessionObj.h"
@@ -61,7 +61,7 @@ SGD_RV __cdecl SDF_OpenDevice(SGD_HANDLE *phDeviceHandle){
 
 	SGD_INT32 hDev = GetTickCount();
 
-	//Ôö¼ÓÒ»¸öÎÕÊÖÁ¬½Ó
+	//å¢åŠ ä¸€ä¸ªæ¡æ‰‹è¿æ¥
 
 	for(int i = 0 ;i != poolsize;i++)
 	{
@@ -221,7 +221,7 @@ SGD_RV __cdecl SDF_GenerateRandom(SGD_HANDLE hSessionHandle, SGD_UINT32 uiLength
 SGD_RV SDF_GetKeyStatus(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyType, SGD_UINT32 *puiKeyStatus, SGD_UINT32 *puiKeyCount){return 0;}
 SGD_RV SDF_GetDeviceRunStatus(SGD_HANDLE hSessionHandle,DEVICE_RUN_STATUS *pstDeviceRunStatus){return 0;}
 
-/*·Ç¶Ô³ÆÃÜÂëRSAÃÜÔ¿¹ÜÀí¡¢ÔËËãº¯Êı*/
+/*éå¯¹ç§°å¯†ç RSAå¯†é’¥ç®¡ç†ã€è¿ç®—å‡½æ•°*/
 SGD_RV __cdecl SDF_GenerateKeyPair_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyBits,RSArefPublicKey *pucPublicKey,RSArefPrivateKey *pucPrivateKey)
 {
 	SGD_RV rv = SDR_OK;
@@ -295,7 +295,7 @@ SGD_RV SDF_InternalPublicKeyOperation_RSA(SGD_HANDLE hSessionHandle,SGD_UINT32  
 SGD_RV SDF_InternalPrivateKeyOperation_RSA(SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SGD_UINT32  uiKeyUsage,SGD_UCHAR *pucDataInput,SGD_UINT32  uiInputLength,SGD_UCHAR *pucDataOutput,SGD_UINT32  *puiOutputLength){return 0;}
 SGD_RV SDF_ExchangeDigitEnvelopeBaseOnRSA(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,RSArefPublicKey *pucPublicKey,SGD_UCHAR *pucDEInput,SGD_UINT32  uiDELength,SGD_UCHAR *pucDEOutput,SGD_UINT32  *puiDELength){return 0;}
 
-/*·Ç¶Ô³ÆÃÜÂëECCÃÜÔ¿¹ÜÀí¡¢ÔËËãº¯Êı*/
+/*éå¯¹ç§°å¯†ç ECCå¯†é’¥ç®¡ç†ã€è¿ç®—å‡½æ•°*/
 SGD_RV SDF_GenerateKeyPair_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32  uiAlgID,SGD_UINT32  uiKeyBits,ECCrefPublicKey *pucPublicKey,ECCrefPrivateKey *pucPrivateKey){return 0;}
 SGD_RV SDF_ExportSignPublicKey_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,ECCrefPublicKey *pucPublicKey){return 0;}
 SGD_RV SDF_ExportEncPublicKey_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,ECCrefPublicKey *pucPublicKey){return 0;}
@@ -315,7 +315,7 @@ SGD_RV SDF_GenerateKeyWithECC(SGD_HANDLE hSessionHandle, SGD_UCHAR *pucResponseI
 SGD_RV SDF_GenerateAgreementDataAndKeyWithECC(SGD_HANDLE hSessionHandle,SGD_UINT32 uiISKIndex,SGD_UINT32 uiKeyBits,SGD_UCHAR *pucResponseID,SGD_UINT32 uiResponseIDLength,SGD_UCHAR *pucSponsorID,SGD_UINT32 uiSponsorIDLength,ECCrefPublicKey *pucSponsorPublicKey,ECCrefPublicKey *pucSponsorTmpPublicKey,ECCrefPublicKey  *pucResponsePublicKey,ECCrefPublicKey  *pucResponseTmpPublicKey,SGD_HANDLE *phKeyHandle){return 0;}
 SGD_RV SDF_ExchangeDigitEnvelopeBaseOnECC(SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SGD_UINT32  uiAlgID,ECCrefPublicKey *pucPublicKey,ECCCipher *pucEncDataIn,ECCCipher *pucEncDataOut){return 0;}
 
-/*¶Ô³ÆÃÜÔ¿¹ÜÀí¡¢ÃÜÂëÔËËãº¯Êı*/
+/*å¯¹ç§°å¯†é’¥ç®¡ç†ã€å¯†ç è¿ç®—å‡½æ•°*/
 SGD_RV SDF_GenerateKeyWithIPK_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiIPKIndex,SGD_UINT32 uiKeyBits,SGD_UCHAR *pucKey,SGD_UINT32 *puiKeyLength,SGD_HANDLE *phKeyHandle){return 0;}
 SGD_RV SDF_GenerateKeyWithEPK_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyBits,RSArefPublicKey *pucPublicKey,SGD_UCHAR *pucKey,SGD_UINT32 *puiKeyLength,SGD_HANDLE *phKeyHandle){return 0;}
 SGD_RV SDF_GenerateKeyWithKEK(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyBits,SGD_UINT32  uiAlgID,SGD_UINT32 uiKEKIndex, SGD_UCHAR *pucKey, SGD_UINT32 *puiKeyLength, SGD_HANDLE *phKeyHandle){return 0;}
@@ -333,18 +333,18 @@ SGD_RV SDF_Encrypt(SGD_HANDLE hSessionHandle,SGD_HANDLE hKeyHandle,SGD_UINT32 ui
 SGD_RV SDF_Decrypt (SGD_HANDLE hSessionHandle,SGD_HANDLE hKeyHandle,SGD_UINT32 uiAlgID,SGD_UCHAR *pucIV,SGD_UCHAR *pucEncData,SGD_UINT32  uiEncDataLength,SGD_UCHAR *pucData,SGD_UINT32 *puiDataLength){return 0;}
 SGD_RV SDF_CalculateMAC(SGD_HANDLE hSessionHandle,SGD_HANDLE hKeyHandle,SGD_UINT32 uiAlgID,SGD_UCHAR *pucIV,SGD_UCHAR *pucData,SGD_UINT32 uiDataLength,SGD_UCHAR *pucMAC,SGD_UINT32  *puiMACLength){return 0;}
 
-/*ÔÓ´ÕÔËËãº¯Êı*/
+/*æ‚å‡‘è¿ç®—å‡½æ•°*/
 SGD_RV SDF_HashInit(SGD_HANDLE hSessionHandle,SGD_UINT32 uiAlgID,ECCrefPublicKey *pucPublicKey,SGD_UCHAR *pucID,SGD_UINT32 uiIDLength){return 0;}
 SGD_RV SDF_HashUpdate(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucData,SGD_UINT32  uiDataLength){return 0;}
 SGD_RV SDF_HashFinal(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucHash,SGD_UINT32  *puiHashLength){return 0;}
 
-/*ÓÃ»§ÎÄ¼ş²Ù×÷º¯Êı*/
+/*ç”¨æˆ·æ–‡ä»¶æ“ä½œå‡½æ•°*/
 SGD_RV SDF_CreateFile(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiFileSize){return 0;}
 SGD_RV SDF_ReadFile(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 *puiReadLength,SGD_UCHAR *pucBuffer){return 0;}
 SGD_RV SDF_WriteFile(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 uiWriteLength,SGD_UCHAR *pucBuffer){return 0;}
 SGD_RV SDF_DeleteFile(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucFileName,SGD_UINT32 uiNameLen){return 0;}
 
-/*×Ô¶¨Òå½Ó¿Ú£¬×Ü²ÎPKCAÀ©Õ¹½Ó¿Ú£¬½ö×Ü²Î×¨ÓÃÃÜÂë»úÖ§³Ö*/
+/*è‡ªå®šä¹‰æ¥å£ï¼Œæ€»å‚PKCAæ‰©å±•æ¥å£ï¼Œä»…æ€»å‚ä¸“ç”¨å¯†ç æœºæ”¯æŒ*/
 SGD_RV	SDF_ImportECCKeyPair(SGD_HANDLE		hSessionHandle, SGD_UINT32	uiKeyNumber,ECCrefPublicKey	*puxPublicKey,ECCrefPrivateKey	*pucPrivateKey){return 0;}
 SGD_RV	SDF_InternalSignEx_ECC(SGD_HANDLE	hSessionHandle,SGD_UINT32	uiKeyNumber,SGD_UCHAR	*pucData,SGD_UINT32	uiDataLength,ECCPoint	*P1,ECCSignatureEx	*sign){return 0;}
 SGD_RV  SDF_ECCMultAdd(SGD_HANDLE	hSessionHandle, SGD_UINT32	k,ECCrefPrivateKey	*e, ECCrefPublicKey	*A,ECCrefPublicKey	*B,ECCrefPublicKey	*C){return 0;}
@@ -382,13 +382,13 @@ SGD_RV SDF_Decrypt_GCM(SGD_HANDLE hSessionHandle,
 					   SGD_UINT32 uiIVLength,
 					   SGD_UCHAR *pucAAD,			
 					   SGD_UINT32 uiAADLength, 
-					   SGD_UCHAR *pucTag,              //ÊäÈë£¬ÈÏÖ¤±êÇ©Êı¾İ     
-					   SGD_UINT32 uiTagLength,         //ÊäÈë£¬ÈÏÖ¤±êÇ©Êı¾İ³¤¶È
-					   SGD_UCHAR *pucEncData,          //ÊäÈë£¬´ı½âÃÜµÄÃÜÎÄÊı¾İ
-					   SGD_UINT32 puiEncDataLength,    //ÊäÈë£¬´ı½âÃÜµÄÃÜÎÄÊı¾İ³¤¶È
-					   SGD_UCHAR *pucData,             //Êä³ö£¬½âÃÜºóµÄÃ÷ÎÄÊı¾İ
-					   SGD_UINT32  *uiDataLength,      //Êä³ö£¬½âÃÜºóµÄÃ÷ÎÄÊı¾İ³¤¶È
-					   SGD_UINT32  *puiResult){return 0;}				//Êä³ö£¬ÈÏÖ¤½á¹û£¬1ÎªÈÏÖ¤Í¨¹ı£¬0ÎªÈÏÖ¤Ê§°Ü		
+					   SGD_UCHAR *pucTag,              //è¾“å…¥ï¼Œè®¤è¯æ ‡ç­¾æ•°æ®     
+					   SGD_UINT32 uiTagLength,         //è¾“å…¥ï¼Œè®¤è¯æ ‡ç­¾æ•°æ®é•¿åº¦
+					   SGD_UCHAR *pucEncData,          //è¾“å…¥ï¼Œå¾…è§£å¯†çš„å¯†æ–‡æ•°æ®
+					   SGD_UINT32 puiEncDataLength,    //è¾“å…¥ï¼Œå¾…è§£å¯†çš„å¯†æ–‡æ•°æ®é•¿åº¦
+					   SGD_UCHAR *pucData,             //è¾“å‡ºï¼Œè§£å¯†åçš„æ˜æ–‡æ•°æ®
+					   SGD_UINT32  *uiDataLength,      //è¾“å‡ºï¼Œè§£å¯†åçš„æ˜æ–‡æ•°æ®é•¿åº¦
+					   SGD_UINT32  *puiResult){return 0;}				//è¾“å‡ºï¼Œè®¤è¯ç»“æœï¼Œ1ä¸ºè®¤è¯é€šè¿‡ï¼Œ0ä¸ºè®¤è¯å¤±è´¥		
 
 
 SGD_RV SDF_ExportSignPublicKey_DSA(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,DSArefPublicKeyLite *pucPublicKey){return 0;}

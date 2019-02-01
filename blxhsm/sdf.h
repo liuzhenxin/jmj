@@ -11,10 +11,10 @@
 extern "C"{
 #endif
 
-	/*RSA×î´óÄ£³¤¶¨Òå*/
+	/*RSAæœ€å¤§æ¨¡é•¿å®šä¹‰*/
 #define SGD_RSA_MAX_BITS    4096
 
-	/*Êı¾İÀàĞÍ¶¨Òå*/
+	/*æ•°æ®ç±»å‹å®šä¹‰*/
 	typedef char				SGD_CHAR;
 	typedef char				SGD_INT8;
 	typedef short				SGD_INT16;
@@ -30,7 +30,7 @@ extern "C"{
 	typedef int					SGD_BOOL;
 	typedef void*				SGD_HANDLE;
 
-	/*Éè±¸ĞÅÏ¢*/
+	/*è®¾å¤‡ä¿¡æ¯*/
 	typedef struct DeviceInfo_st{
 		unsigned char IssuerName[40];
 		unsigned char DeviceName[16];
@@ -44,17 +44,17 @@ extern "C"{
 	}DEVICEINFO;
 
 	typedef struct st_DeviceRunStatus{
-		unsigned int onboot;		//·şÎñÊÇ·ñ¿ª»ú×ÔÆô¶¯
-		unsigned int service;		//µ±Ç°·şÎñ×´Ì¬£¬0-Î´Æô¶¯£¬1-ÒÑÆô¶¯£¬>1×´Ì¬Òì³£
-		unsigned int concurrency;	//µ±Ç°²¢·¢Êı
-		unsigned int memtotal;		//ÄÚ´æ´óĞ¡
-		unsigned int memfree;		//ÄÚ´æ¿ÕÏĞ
-		unsigned int cpu;			//CPUÕ¼ÓÃÂÊ£¬²»°üº¬Ğ¡Êıµã²¿·Ö
+		unsigned int onboot;		//æœåŠ¡æ˜¯å¦å¼€æœºè‡ªå¯åŠ¨
+		unsigned int service;		//å½“å‰æœåŠ¡çŠ¶æ€ï¼Œ0-æœªå¯åŠ¨ï¼Œ1-å·²å¯åŠ¨ï¼Œ>1çŠ¶æ€å¼‚å¸¸
+		unsigned int concurrency;	//å½“å‰å¹¶å‘æ•°
+		unsigned int memtotal;		//å†…å­˜å¤§å°
+		unsigned int memfree;		//å†…å­˜ç©ºé—²
+		unsigned int cpu;			//CPUå ç”¨ç‡ï¼Œä¸åŒ…å«å°æ•°ç‚¹éƒ¨åˆ†
 		unsigned int reserve1;
 		unsigned int reserve2;
 	}DEVICE_RUN_STATUS;
 
-	/*RSAÃÜÔ¿*/
+	/*RSAå¯†é’¥*/
 #define LiteRSAref_MAX_BITS    2048
 #define LiteRSAref_MAX_LEN     ((LiteRSAref_MAX_BITS + 7) / 8)
 #define LiteRSAref_MAX_PBITS   ((LiteRSAref_MAX_BITS + 1) / 2)
@@ -119,7 +119,7 @@ extern "C"{
 	typedef struct RSArefPrivateKeyLite_st  RSArefPrivateKey;
 #endif
 
-	/*ECCÃÜÔ¿*/
+	/*ECCå¯†é’¥*/
 #define ECCref_MAX_BITS			256 
 #define ECCref_MAX_LEN			((ECCref_MAX_BITS+7) / 8)
 #define ECCref_MAX_CIPHER_LEN	136
@@ -158,7 +158,7 @@ extern "C"{
 		unsigned char  y[ECCref_MAX_LEN]; 
 	}ECCPoint;
 
-	// À©Õ¹µÄÇ©Ãû½á¹¹¶¨Òå
+	// æ‰©å±•çš„ç­¾åç»“æ„å®šä¹‰
 	typedef  struct  ECCSignatureEx_st 
 	{
 		ECCPoint	R;
@@ -225,11 +225,11 @@ extern "C"{
 		unsigned char  pbKey[32];
 	}KEY_INFO,*KEY_HANDLE;
 
-	/*³£Á¿¶¨Òå*/
+	/*å¸¸é‡å®šä¹‰*/
 #define SGD_TRUE	0x00000001
 #define SGD_FALSE	0x00000000
 
-	/*Ëã·¨±êÊ¶*/
+	/*ç®—æ³•æ ‡è¯†*/
 #define SGD_SM1_ECB		0x00000101
 #define SGD_SM1_CBC		0x00000102
 #define SGD_SM1_CFB		0x00000104
@@ -302,70 +302,70 @@ extern "C"{
 #define SGD_SHA224		0x00000020
 #define SGD_MD5			0x00000080
 
-	/*±ê×¼´íÎóÂë¶¨Òå*/
-#define SDR_OK				0x0						   /*³É¹¦*/
+	/*æ ‡å‡†é”™è¯¯ç å®šä¹‰*/
+#define SDR_OK				0x0						   /*æˆåŠŸ*/
 #define SDR_BASE			0x01000000
-#define SDR_UNKNOWERR		(SDR_BASE + 0x00000001)	   /*Î´Öª´íÎó*/
-#define SDR_NOTSUPPORT		(SDR_BASE + 0x00000002)	   /*²»Ö§³Ö*/
-#define SDR_COMMFAIL		(SDR_BASE + 0x00000003)    /*Í¨ĞÅ´íÎó*/
-#define SDR_HARDFAIL		(SDR_BASE + 0x00000004)    /*Ó²¼ş´íÎó*/
-#define SDR_OPENDEVICE		(SDR_BASE + 0x00000005)    /*´ò¿ªÉè±¸´íÎó*/
-#define SDR_OPENSESSION		(SDR_BASE + 0x00000006)    /*´ò¿ª»á»°¾ä±ú´íÎó*/
-#define SDR_PARDENY			(SDR_BASE + 0x00000007)    /*È¨ÏŞ²»Âú×ã*/
-#define SDR_KEYNOTEXIST		(SDR_BASE + 0x00000008)    /*ÃÜÔ¿²»´æÔÚ*/
-#define SDR_ALGNOTSUPPORT	(SDR_BASE + 0x00000009)    /*²»Ö§³ÖµÄËã·¨*/
-#define SDR_ALGMODNOTSUPPORT (SDR_BASE + 0x0000000A)   /*²»Ö§³ÖµÄËã·¨Ä£Ê½*/
-#define SDR_PKOPERR			(SDR_BASE + 0x0000000B)    /*¹«Ô¿ÔËËã´íÎó*/
-#define SDR_SKOPERR			(SDR_BASE + 0x0000000C)    /*Ë½Ô¿ÔËËã´íÎó*/
-#define SDR_SIGNERR			(SDR_BASE + 0x0000000D)    /*Ç©Ãû´íÎó*/
-#define SDR_VERIFYERR		(SDR_BASE + 0x0000000E)    /*ÑéÖ¤´íÎó*/
-#define SDR_SYMOPERR		(SDR_BASE + 0x0000000F)    /*¶Ô³ÆÔËËã´íÎó*/
-#define SDR_STEPERR			(SDR_BASE + 0x00000010)    /*²½Öè´íÎó*/
-#define SDR_FILESIZEERR		(SDR_BASE + 0x00000011)    /*ÎÄ¼ş´óĞ¡´íÎó*/
-#define SDR_FILENOEXIST		(SDR_BASE + 0x00000012)    /*ÎÄ¼ş²»´æÔÚ*/
-#define SDR_FILEOFSERR		(SDR_BASE + 0x00000013)    /*ÎÄ¼ş²Ù×÷Æ«ÒÆÁ¿´íÎó*/
-#define SDR_KEYTYPEERR		(SDR_BASE + 0x00000014)    /*ÃÜÔ¿ÀàĞÍ´íÎó*/
-#define SDR_KEYERR			(SDR_BASE + 0x00000015)    /*ÃÜÔ¿´íÎó*/
+#define SDR_UNKNOWERR		(SDR_BASE + 0x00000001)	   /*æœªçŸ¥é”™è¯¯*/
+#define SDR_NOTSUPPORT		(SDR_BASE + 0x00000002)	   /*ä¸æ”¯æŒ*/
+#define SDR_COMMFAIL		(SDR_BASE + 0x00000003)    /*é€šä¿¡é”™è¯¯*/
+#define SDR_HARDFAIL		(SDR_BASE + 0x00000004)    /*ç¡¬ä»¶é”™è¯¯*/
+#define SDR_OPENDEVICE		(SDR_BASE + 0x00000005)    /*æ‰“å¼€è®¾å¤‡é”™è¯¯*/
+#define SDR_OPENSESSION		(SDR_BASE + 0x00000006)    /*æ‰“å¼€ä¼šè¯å¥æŸ„é”™è¯¯*/
+#define SDR_PARDENY			(SDR_BASE + 0x00000007)    /*æƒé™ä¸æ»¡è¶³*/
+#define SDR_KEYNOTEXIST		(SDR_BASE + 0x00000008)    /*å¯†é’¥ä¸å­˜åœ¨*/
+#define SDR_ALGNOTSUPPORT	(SDR_BASE + 0x00000009)    /*ä¸æ”¯æŒçš„ç®—æ³•*/
+#define SDR_ALGMODNOTSUPPORT (SDR_BASE + 0x0000000A)   /*ä¸æ”¯æŒçš„ç®—æ³•æ¨¡å¼*/
+#define SDR_PKOPERR			(SDR_BASE + 0x0000000B)    /*å…¬é’¥è¿ç®—é”™è¯¯*/
+#define SDR_SKOPERR			(SDR_BASE + 0x0000000C)    /*ç§é’¥è¿ç®—é”™è¯¯*/
+#define SDR_SIGNERR			(SDR_BASE + 0x0000000D)    /*ç­¾åé”™è¯¯*/
+#define SDR_VERIFYERR		(SDR_BASE + 0x0000000E)    /*éªŒè¯é”™è¯¯*/
+#define SDR_SYMOPERR		(SDR_BASE + 0x0000000F)    /*å¯¹ç§°è¿ç®—é”™è¯¯*/
+#define SDR_STEPERR			(SDR_BASE + 0x00000010)    /*æ­¥éª¤é”™è¯¯*/
+#define SDR_FILESIZEERR		(SDR_BASE + 0x00000011)    /*æ–‡ä»¶å¤§å°é”™è¯¯*/
+#define SDR_FILENOEXIST		(SDR_BASE + 0x00000012)    /*æ–‡ä»¶ä¸å­˜åœ¨*/
+#define SDR_FILEOFSERR		(SDR_BASE + 0x00000013)    /*æ–‡ä»¶æ“ä½œåç§»é‡é”™è¯¯*/
+#define SDR_KEYTYPEERR		(SDR_BASE + 0x00000014)    /*å¯†é’¥ç±»å‹é”™è¯¯*/
+#define SDR_KEYERR			(SDR_BASE + 0x00000015)    /*å¯†é’¥é”™è¯¯*/
 
-	/*À©Õ¹´íÎóÂë*/
-#define SWR_BASE				(SDR_BASE + 0x00010000)	/*×Ô¶¨Òå´íÎóÂë»ù´¡Öµ*/
-#define SWR_INVALID_USER		(SWR_BASE + 0x00000001)	/*ÎŞĞ§µÄÓÃ»§Ãû*/
-#define SWR_INVALID_AUTHENCODE	(SWR_BASE + 0x00000002)	/*ÎŞĞ§µÄÊÚÈ¨Âë*/
-#define SWR_PROTOCOL_VER_ERR	(SWR_BASE + 0x00000003)	/*²»Ö§³ÖµÄĞ­Òé°æ±¾*/
-#define SWR_INVALID_COMMAND		(SWR_BASE + 0x00000004)	/*´íÎóµÄÃüÁî×Ö*/
-#define SWR_INVALID_PACKAGE		(SWR_BASE + 0x00000005)	/*´íÎóµÄÊı¾İ°ü¸ñÊ½*/
-#define SWR_FILE_ALREADY_EXIST	(SWR_BASE + 0x00000006)	/*ÒÑ´æÔÚÍ¬ÃûÎÄ¼ş*/
+	/*æ‰©å±•é”™è¯¯ç */
+#define SWR_BASE				(SDR_BASE + 0x00010000)	/*è‡ªå®šä¹‰é”™è¯¯ç åŸºç¡€å€¼*/
+#define SWR_INVALID_USER		(SWR_BASE + 0x00000001)	/*æ— æ•ˆçš„ç”¨æˆ·å*/
+#define SWR_INVALID_AUTHENCODE	(SWR_BASE + 0x00000002)	/*æ— æ•ˆçš„æˆæƒç */
+#define SWR_PROTOCOL_VER_ERR	(SWR_BASE + 0x00000003)	/*ä¸æ”¯æŒçš„åè®®ç‰ˆæœ¬*/
+#define SWR_INVALID_COMMAND		(SWR_BASE + 0x00000004)	/*é”™è¯¯çš„å‘½ä»¤å­—*/
+#define SWR_INVALID_PACKAGE		(SWR_BASE + 0x00000005)	/*é”™è¯¯çš„æ•°æ®åŒ…æ ¼å¼*/
+#define SWR_FILE_ALREADY_EXIST	(SWR_BASE + 0x00000006)	/*å·²å­˜åœ¨åŒåæ–‡ä»¶*/
 
-#define SWR_SOCKET_TIMEOUT		(SWR_BASE + 0x00000100)	/*³¬Ê±´íÎó*/
-#define SWR_CONNECT_ERR			(SWR_BASE + 0x00000101)	/*Á¬½Ó·şÎñÆ÷´íÎó*/
-#define SWR_SET_SOCKOPT_ERR		(SWR_BASE + 0x00000102)	/*ÉèÖÃSocket²ÎÊı´íÎó*/
-#define SWR_SOCKET_SEND_ERR		(SWR_BASE + 0x00000104)	/*·¢ËÍLOGINRequest´íÎó*/
-#define SWR_SOCKET_RECV_ERR		(SWR_BASE + 0x00000105)	/*·¢ËÍLOGINRequest´íÎó*/
-#define SWR_SOCKET_RECV_0		(SWR_BASE + 0x00000106)	/*·¢ËÍLOGINRequest´íÎó*/
+#define SWR_SOCKET_TIMEOUT		(SWR_BASE + 0x00000100)	/*è¶…æ—¶é”™è¯¯*/
+#define SWR_CONNECT_ERR			(SWR_BASE + 0x00000101)	/*è¿æ¥æœåŠ¡å™¨é”™è¯¯*/
+#define SWR_SET_SOCKOPT_ERR		(SWR_BASE + 0x00000102)	/*è®¾ç½®Socketå‚æ•°é”™è¯¯*/
+#define SWR_SOCKET_SEND_ERR		(SWR_BASE + 0x00000104)	/*å‘é€LOGINRequesté”™è¯¯*/
+#define SWR_SOCKET_RECV_ERR		(SWR_BASE + 0x00000105)	/*å‘é€LOGINRequesté”™è¯¯*/
+#define SWR_SOCKET_RECV_0		(SWR_BASE + 0x00000106)	/*å‘é€LOGINRequesté”™è¯¯*/
 
-#define SWR_NO_AVAILABLE_HSM	(SWR_BASE + 0x00000201)	/*Ã»ÓĞ¿ÉÓÃµÄ¼ÓÃÜ»ú*/
-#define SWR_NO_AVAILABLE_CSM	(SWR_BASE + 0x00000202)	/*¼ÓÃÜ»úÄÚÃ»ÓĞ¿ÉÓÃµÄ¼ÓÃÜÄ£¿é*/
-#define SWR_CONFIG_ERR			(SWR_BASE + 0x00000301)	/*ÅäÖÃÎÄ¼ş´íÎó*/
+#define SWR_NO_AVAILABLE_HSM	(SWR_BASE + 0x00000201)	/*æ²¡æœ‰å¯ç”¨çš„åŠ å¯†æœº*/
+#define SWR_NO_AVAILABLE_CSM	(SWR_BASE + 0x00000202)	/*åŠ å¯†æœºå†…æ²¡æœ‰å¯ç”¨çš„åŠ å¯†æ¨¡å—*/
+#define SWR_CONFIG_ERR			(SWR_BASE + 0x00000301)	/*é…ç½®æ–‡ä»¶é”™è¯¯*/
 
-#define SWR_CARD_BASE           (SDR_BASE + 0x00020000)		 /*ÃÜÂë¿¨´íÎóÂë*/
-#define SDR_BUFFER_TOO_SMALL	(SWR_CARD_BASE + 0x00000101) /*½ÓÊÕ²ÎÊıµÄ»º´æÇøÌ«Ğ¡*/
-#define SDR_DATA_PAD			(SWR_CARD_BASE + 0x00000102) /*Êı¾İÃ»ÓĞ°´ÕıÈ·¸ñÊ½Ìî³ä£¬»ò½âÃÜµÃµ½µÄÍÑÃÜÊı¾İ²»·ûºÏÌî³ä¸ñÊ½*/
-#define SDR_DATA_SIZE			(SWR_CARD_BASE + 0x00000103) /*Ã÷ÎÄ»òÃÜÎÄ³¤¶È²»·ûºÏÏàÓ¦µÄËã·¨ÒªÇó*/
-#define SDR_CRYPTO_NOT_INIT		(SWR_CARD_BASE + 0x00000104) /*²½Öè´íÎó*/
+#define SWR_CARD_BASE           (SDR_BASE + 0x00020000)		 /*å¯†ç å¡é”™è¯¯ç */
+#define SDR_BUFFER_TOO_SMALL	(SWR_CARD_BASE + 0x00000101) /*æ¥æ”¶å‚æ•°çš„ç¼“å­˜åŒºå¤ªå°*/
+#define SDR_DATA_PAD			(SWR_CARD_BASE + 0x00000102) /*æ•°æ®æ²¡æœ‰æŒ‰æ­£ç¡®æ ¼å¼å¡«å……ï¼Œæˆ–è§£å¯†å¾—åˆ°çš„è„±å¯†æ•°æ®ä¸ç¬¦åˆå¡«å……æ ¼å¼*/
+#define SDR_DATA_SIZE			(SWR_CARD_BASE + 0x00000103) /*æ˜æ–‡æˆ–å¯†æ–‡é•¿åº¦ä¸ç¬¦åˆç›¸åº”çš„ç®—æ³•è¦æ±‚*/
+#define SDR_CRYPTO_NOT_INIT		(SWR_CARD_BASE + 0x00000104) /*æ­¥éª¤é”™è¯¯*/
 
-#define SWR_MANAGEMENT_DENY		(SWR_CARD_BASE + 0x00001001)	//¹ÜÀíÈ¨ÏŞ²»Âú×ã
-#define SWR_OPERATION_DENY		(SWR_CARD_BASE + 0x00001002)	//²Ù×÷È¨ÏŞ²»Âú×ã
-#define SWR_DEVICE_STATUS_ERR   (SWR_CARD_BASE + 0x00001003)	//µ±Ç°Éè±¸×´Ì¬²»Âú×ãÏÖÓĞ²Ù×÷
+#define SWR_MANAGEMENT_DENY		(SWR_CARD_BASE + 0x00001001)	//ç®¡ç†æƒé™ä¸æ»¡è¶³
+#define SWR_OPERATION_DENY		(SWR_CARD_BASE + 0x00001002)	//æ“ä½œæƒé™ä¸æ»¡è¶³
+#define SWR_DEVICE_STATUS_ERR   (SWR_CARD_BASE + 0x00001003)	//å½“å‰è®¾å¤‡çŠ¶æ€ä¸æ»¡è¶³ç°æœ‰æ“ä½œ
 
-#define SWR_LOGIN_ERR           (SWR_CARD_BASE + 0x00001011)	//µÇÂ¼Ê§°Ü
-#define SWR_USERID_ERR          (SWR_CARD_BASE + 0x00001012)	//ÓÃ»§IDÊıÄ¿/ºÅÂë´íÎó
-#define SWR_PARAMENT_ERR        (SWR_CARD_BASE + 0x00001013)	//²ÎÊı´íÎó
-#define SWR_KEYTYPEERR			(SWR_CARD_BASE + 0x00000020)	//ÃÜÔ¿ÀàĞÍ´íÎó
+#define SWR_LOGIN_ERR           (SWR_CARD_BASE + 0x00001011)	//ç™»å½•å¤±è´¥
+#define SWR_USERID_ERR          (SWR_CARD_BASE + 0x00001012)	//ç”¨æˆ·IDæ•°ç›®/å·ç é”™è¯¯
+#define SWR_PARAMENT_ERR        (SWR_CARD_BASE + 0x00001013)	//å‚æ•°é”™è¯¯
+#define SWR_KEYTYPEERR			(SWR_CARD_BASE + 0x00000020)	//å¯†é’¥ç±»å‹é”™è¯¯
 
 
 	
 	
-	/*Éè±¸¹ÜÀíÀàº¯Êı*/
+	/*è®¾å¤‡ç®¡ç†ç±»å‡½æ•°*/
 	SGD_RV __cdecl SDF_OpenDevice(SGD_HANDLE *phDeviceHandle);
 	SGD_RV __cdecl SDF_CloseDevice(SGD_HANDLE hDeviceHandle);
 
@@ -380,7 +380,7 @@ extern "C"{
 	SGD_RV SDF_GetKeyStatus(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyType, SGD_UINT32 *puiKeyStatus, SGD_UINT32 *puiKeyCount);
 	SGD_RV SDF_GetDeviceRunStatus(SGD_HANDLE hSessionHandle,DEVICE_RUN_STATUS *pstDeviceRunStatus);
 
-	/*·Ç¶Ô³ÆÃÜÂëRSAÃÜÔ¿¹ÜÀí¡¢ÔËËãº¯Êı*/
+	/*éå¯¹ç§°å¯†ç RSAå¯†é’¥ç®¡ç†ã€è¿ç®—å‡½æ•°*/
 	SGD_RV __cdecl SDF_GenerateKeyPair_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyBits,RSArefPublicKey *pucPublicKey,RSArefPrivateKey *pucPrivateKey);
 	SGD_RV __cdecl SDF_ExportSignPublicKey_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,RSArefPublicKey *pucPublicKey);
 	//SGD_RV SDF_ExportSignPublicKey_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex);
@@ -391,7 +391,7 @@ extern "C"{
 	SGD_RV SDF_InternalPrivateKeyOperation_RSA(SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SGD_UINT32  uiKeyUsage,SGD_UCHAR *pucDataInput,SGD_UINT32  uiInputLength,SGD_UCHAR *pucDataOutput,SGD_UINT32  *puiOutputLength);
 	SGD_RV SDF_ExchangeDigitEnvelopeBaseOnRSA(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,RSArefPublicKey *pucPublicKey,SGD_UCHAR *pucDEInput,SGD_UINT32  uiDELength,SGD_UCHAR *pucDEOutput,SGD_UINT32  *puiDELength);
 
-	/*·Ç¶Ô³ÆÃÜÂëECCÃÜÔ¿¹ÜÀí¡¢ÔËËãº¯Êı*/
+	/*éå¯¹ç§°å¯†ç ECCå¯†é’¥ç®¡ç†ã€è¿ç®—å‡½æ•°*/
 	SGD_RV SDF_GenerateKeyPair_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32  uiAlgID,SGD_UINT32  uiKeyBits,ECCrefPublicKey *pucPublicKey,ECCrefPrivateKey *pucPrivateKey);
 	SGD_RV SDF_ExportSignPublicKey_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,ECCrefPublicKey *pucPublicKey);
 	SGD_RV SDF_ExportEncPublicKey_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,ECCrefPublicKey *pucPublicKey);
@@ -411,7 +411,7 @@ extern "C"{
 	SGD_RV SDF_GenerateAgreementDataAndKeyWithECC(SGD_HANDLE hSessionHandle,SGD_UINT32 uiISKIndex,SGD_UINT32 uiKeyBits,SGD_UCHAR *pucResponseID,SGD_UINT32 uiResponseIDLength,SGD_UCHAR *pucSponsorID,SGD_UINT32 uiSponsorIDLength,ECCrefPublicKey *pucSponsorPublicKey,ECCrefPublicKey *pucSponsorTmpPublicKey,ECCrefPublicKey  *pucResponsePublicKey,ECCrefPublicKey  *pucResponseTmpPublicKey,SGD_HANDLE *phKeyHandle);
 	SGD_RV SDF_ExchangeDigitEnvelopeBaseOnECC(SGD_HANDLE hSessionHandle,SGD_UINT32  uiKeyIndex,SGD_UINT32  uiAlgID,ECCrefPublicKey *pucPublicKey,ECCCipher *pucEncDataIn,ECCCipher *pucEncDataOut);
 
-	/*¶Ô³ÆÃÜÔ¿¹ÜÀí¡¢ÃÜÂëÔËËãº¯Êı*/
+	/*å¯¹ç§°å¯†é’¥ç®¡ç†ã€å¯†ç è¿ç®—å‡½æ•°*/
 	SGD_RV SDF_GenerateKeyWithIPK_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiIPKIndex,SGD_UINT32 uiKeyBits,SGD_UCHAR *pucKey,SGD_UINT32 *puiKeyLength,SGD_HANDLE *phKeyHandle);
 	SGD_RV SDF_GenerateKeyWithEPK_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyBits,RSArefPublicKey *pucPublicKey,SGD_UCHAR *pucKey,SGD_UINT32 *puiKeyLength,SGD_HANDLE *phKeyHandle);
 	SGD_RV SDF_GenerateKeyWithKEK(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyBits,SGD_UINT32  uiAlgID,SGD_UINT32 uiKEKIndex, SGD_UCHAR *pucKey, SGD_UINT32 *puiKeyLength, SGD_HANDLE *phKeyHandle);
@@ -429,18 +429,18 @@ extern "C"{
 	SGD_RV SDF_Decrypt (SGD_HANDLE hSessionHandle,SGD_HANDLE hKeyHandle,SGD_UINT32 uiAlgID,SGD_UCHAR *pucIV,SGD_UCHAR *pucEncData,SGD_UINT32  uiEncDataLength,SGD_UCHAR *pucData,SGD_UINT32 *puiDataLength);
 	SGD_RV SDF_CalculateMAC(SGD_HANDLE hSessionHandle,SGD_HANDLE hKeyHandle,SGD_UINT32 uiAlgID,SGD_UCHAR *pucIV,SGD_UCHAR *pucData,SGD_UINT32 uiDataLength,SGD_UCHAR *pucMAC,SGD_UINT32  *puiMACLength);
 
-	/*ÔÓ´ÕÔËËãº¯Êı*/
+	/*æ‚å‡‘è¿ç®—å‡½æ•°*/
 	SGD_RV SDF_HashInit(SGD_HANDLE hSessionHandle,SGD_UINT32 uiAlgID,ECCrefPublicKey *pucPublicKey,SGD_UCHAR *pucID,SGD_UINT32 uiIDLength);
 	SGD_RV SDF_HashUpdate(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucData,SGD_UINT32  uiDataLength);
 	SGD_RV SDF_HashFinal(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucHash,SGD_UINT32  *puiHashLength);
 
-	/*ÓÃ»§ÎÄ¼ş²Ù×÷º¯Êı*/
+	/*ç”¨æˆ·æ–‡ä»¶æ“ä½œå‡½æ•°*/
 	SGD_RV SDF_CreateFile(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiFileSize);
 	SGD_RV SDF_ReadFile(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 *puiReadLength,SGD_UCHAR *pucBuffer);
 	SGD_RV SDF_WriteFile(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucFileName,SGD_UINT32 uiNameLen,SGD_UINT32 uiOffset,SGD_UINT32 uiWriteLength,SGD_UCHAR *pucBuffer);
 	SGD_RV SDF_DeleteFile(SGD_HANDLE hSessionHandle,SGD_UCHAR *pucFileName,SGD_UINT32 uiNameLen);
 
-	/*×Ô¶¨Òå½Ó¿Ú£¬×Ü²ÎPKCAÀ©Õ¹½Ó¿Ú£¬½ö×Ü²Î×¨ÓÃÃÜÂë»úÖ§³Ö*/
+	/*è‡ªå®šä¹‰æ¥å£ï¼Œæ€»å‚PKCAæ‰©å±•æ¥å£ï¼Œä»…æ€»å‚ä¸“ç”¨å¯†ç æœºæ”¯æŒ*/
 	SGD_RV	SDF_ImportECCKeyPair(SGD_HANDLE		hSessionHandle, SGD_UINT32	uiKeyNumber,ECCrefPublicKey	*puxPublicKey,ECCrefPrivateKey	*pucPrivateKey);
 	SGD_RV	SDF_InternalSignEx_ECC(SGD_HANDLE	hSessionHandle,SGD_UINT32	uiKeyNumber,SGD_UCHAR	*pucData,SGD_UINT32	uiDataLength,ECCPoint	*P1,ECCSignatureEx	*sign);
 	SGD_RV  SDF_ECCMultAdd(SGD_HANDLE	hSessionHandle, SGD_UINT32	k,ECCrefPrivateKey	*e, ECCrefPublicKey	*A,ECCrefPublicKey	*B,ECCrefPublicKey	*C);
@@ -478,13 +478,13 @@ extern "C"{
 		SGD_UINT32 uiIVLength,
 		SGD_UCHAR *pucAAD,			
 		SGD_UINT32 uiAADLength, 
-		SGD_UCHAR *pucTag,              //ÊäÈë£¬ÈÏÖ¤±êÇ©Êı¾İ     
-		SGD_UINT32 uiTagLength,         //ÊäÈë£¬ÈÏÖ¤±êÇ©Êı¾İ³¤¶È
-		SGD_UCHAR *pucEncData,          //ÊäÈë£¬´ı½âÃÜµÄÃÜÎÄÊı¾İ
-		SGD_UINT32 puiEncDataLength,    //ÊäÈë£¬´ı½âÃÜµÄÃÜÎÄÊı¾İ³¤¶È
-		SGD_UCHAR *pucData,             //Êä³ö£¬½âÃÜºóµÄÃ÷ÎÄÊı¾İ
-		SGD_UINT32  *uiDataLength,      //Êä³ö£¬½âÃÜºóµÄÃ÷ÎÄÊı¾İ³¤¶È
-		SGD_UINT32  *puiResult);				//Êä³ö£¬ÈÏÖ¤½á¹û£¬1ÎªÈÏÖ¤Í¨¹ı£¬0ÎªÈÏÖ¤Ê§°Ü		
+		SGD_UCHAR *pucTag,              //è¾“å…¥ï¼Œè®¤è¯æ ‡ç­¾æ•°æ®     
+		SGD_UINT32 uiTagLength,         //è¾“å…¥ï¼Œè®¤è¯æ ‡ç­¾æ•°æ®é•¿åº¦
+		SGD_UCHAR *pucEncData,          //è¾“å…¥ï¼Œå¾…è§£å¯†çš„å¯†æ–‡æ•°æ®
+		SGD_UINT32 puiEncDataLength,    //è¾“å…¥ï¼Œå¾…è§£å¯†çš„å¯†æ–‡æ•°æ®é•¿åº¦
+		SGD_UCHAR *pucData,             //è¾“å‡ºï¼Œè§£å¯†åçš„æ˜æ–‡æ•°æ®
+		SGD_UINT32  *uiDataLength,      //è¾“å‡ºï¼Œè§£å¯†åçš„æ˜æ–‡æ•°æ®é•¿åº¦
+		SGD_UINT32  *puiResult);				//è¾“å‡ºï¼Œè®¤è¯ç»“æœï¼Œ1ä¸ºè®¤è¯é€šè¿‡ï¼Œ0ä¸ºè®¤è¯å¤±è´¥		
 
 
 	SGD_RV SDF_ExportSignPublicKey_DSA(SGD_HANDLE hSessionHandle, SGD_UINT32  uiKeyIndex,DSArefPublicKeyLite *pucPublicKey);
