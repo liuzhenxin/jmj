@@ -1,7 +1,6 @@
 // IniFile.cpp: implementation of the CIniFile class.
 //
 //////////////////////////////////////////////////////////////////////
-#include "StdAfx.h"
 #include "IniFile.h"
 #include <shlwapi.h>
 #include <stdio.h>

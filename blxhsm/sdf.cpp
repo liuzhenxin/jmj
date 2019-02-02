@@ -10,6 +10,7 @@
 #include <WinBase.h>
 #include "typedef_exception.h"
 #include "INIParser.h"
+#include "ErrorCode.h"
 
 
 
