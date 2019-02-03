@@ -218,6 +218,7 @@ typedef struct DSASignature_st
     unsigned char r[LiteDSAref_MAX_QLEN];
     unsigned char s[LiteDSAref_MAX_QLEN];
 } DSASignature;
+
 typedef struct KeyHandleInfo_st
 {
     SGD_HANDLE hSessionHandle;
