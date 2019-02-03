@@ -7,7 +7,6 @@
 #include "log.h"
 #include "ConnectPool.h"
 #include <Windows.h>
-#include <WinBase.h>
 #include "typedef_exception.h"
 #include "INIParser.h"
 #include "ErrorCode.h"

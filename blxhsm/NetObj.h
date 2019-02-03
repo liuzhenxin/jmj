@@ -22,10 +22,14 @@ public:
 	CNetObj(string ip,int port,string pwd);
 	CNetObj(void);
 
+
 public:
 	bool SendCmd(unsigned char * pcCmd,unsigned int uiCmdLen,unsigned char *pcRev, unsigned int *puiRevLen,unsigned int *puiRet);
 	bool Init();
 	bool IsInit();
+	
+	// 关闭socket连接
+	bool Finalize();
 
 };
 
