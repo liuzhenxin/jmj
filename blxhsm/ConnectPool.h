@@ -10,7 +10,6 @@ using namespace std;
 class CConnectPool{
 
 private:
-	//CSessionObj sObj;	
 	vector<CSessionObj> vCSP; 
 
 public:
@@ -21,7 +20,8 @@ public:
 	bool DelSession(SGD_UINT32 uiSessionID);
 	bool LockSession(SGD_HANDLE hSession);
 	bool UnLockSession(SGD_HANDLE uiSessionID);
-
+	// 关闭全部session连接
+	void  ClearAllSessions();
 private:
 	bool AddSession(CSessionObj sObj);
 

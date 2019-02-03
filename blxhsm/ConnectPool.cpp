@@ -1,4 +1,5 @@
 #include "ConnectPool.h"
+#include <algorithm>
 
 bool CConnectPool::CreateSession(CNetObj nObj,SGD_UINT32 uiDevHandle){
 
@@ -80,6 +81,12 @@ bool CConnectPool::UnLockSession(SGD_HANDLE hSession){
 
 	return false;
 	
+
+}
+
+void CConnectPool::ClearAllSessions()
+{
+    for_each(vCSP.begin(), vCSP.end(), [](CSessionObj obj)->bool{ return obj.Finalize();});
 }
 
 bool CConnectPool::DelSession(SGD_UINT32 uiSessionID){

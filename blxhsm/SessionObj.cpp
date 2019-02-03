@@ -32,6 +32,11 @@ CSessionObj::~CSessionObj(void)
 
 }
 
+bool CSessionObj::Finalize()
+{
+	return nObj.Finalize();
+}
+
 bool CSessionObj::Init(SGD_UINT32 uiDeviceHandle){
 	
 	SessionHandle = (GetTickCount()  + (random(100) + random(89) + 1) * 100);

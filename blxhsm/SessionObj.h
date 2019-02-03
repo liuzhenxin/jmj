@@ -29,6 +29,8 @@ public:
 	CSessionObj(CNetObj nObj);
 	~CSessionObj(void);
 
+	// πÿ±’¡¨Ω”
+	bool Finalize();
 public:
 
 
