@@ -1,4 +1,5 @@
 #include "NetObj.h"
+#include "Protocal.h"
 
 
 CNetObj::CNetObj(void)
@@ -55,12 +56,14 @@ bool CNetObj::Init()
     }
 
     SocketID = sc;
+  
+	Request reqest = {0};
+	uiCmdLen = 0x3c;
+	reqest.commandLen = uiCmdLen;
+	reqest.taskSN = uiTaskSN;
+	reqest.command = uiCmd;
+	memcpy(reqest.commandData, pwd.c_str(), strlen(pwd.c_str()));
 
-    uiCmdLen = 0x3c;
-    memcpy(bCmd, &uiCmdLen, 4);
-    memcpy(bCmd + 4, &uiTaskSN, 4);
-    memcpy(bCmd + 4 + 4, &uiCmd, 4);
-    memcpy(bCmd + 4 + 4 + 4, pwd.c_str(), strlen(pwd.c_str()));
 
     //发送密码验证指令
     if (!SendCmd(bCmd, uiCmdLen, bRev, &uiRevLen, &uiRet))
@@ -84,7 +87,7 @@ bool CNetObj::SendCmd(unsigned char *pcCmd, unsigned int uiCmdLen, unsigned char
 
     unsigned char bRev[4096 + 32] = {0};
 
-    if (send(SocketID, (const char *)pcCmd, uiCmdLen, 0) < 0)
+      if (send(SocketID, (const char *)pcCmd, uiCmdLen, 0) < 0)
         return false;
 
     int rLen = recv(SocketID, (char *)bRev, 4096 + 32, 0);

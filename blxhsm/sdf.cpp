@@ -54,7 +54,15 @@ SGD_RV __cdecl SDF_OpenDevice(SGD_HANDLE *phDeviceHandle)
     SGD_RV rv = SDR_OK;
     INIParser ini_parser;
 
-    ini_parser.ReadINI("config.ini");
+	char path[MAX_PATH] = {0};
+	GetModuleFileNameA(NULL, path, MAX_PATH);
+	char *pChar = strrchr(path, '\\');
+	if(pChar != NULL)
+	{
+		strcpy(pChar+1, "config.ini");
+	}
+
+    ini_parser.ReadINI(path);
 
     poolsize = ini_parser.GetInt("CONNECTPOOL", "poolsize");
     ip = ini_parser.GetValue("HSM", "ip");

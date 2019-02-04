@@ -605,13 +605,18 @@ BOOL CAPITESTDlg::OnInitDialog()
 	// TODO: 在此添加额外的初始化代码
 	//获取配置文件信息
 	BYTE bBuff[MAX_PATH] = {0};
-	BYTE bCurrentDirectory[MAX_PATH] = {0};
+	TCHAR bCurrentDirectory[MAX_PATH] = {0};
 	CString strCurrentDirectory = _T("");
 	CString strFileName = _T(".\\config.ini");
 	CString strSql = _T("");
 	DWORD dwErrCode = 0;
 
-	GetCurrentDirectory(MAX_PATH,(CHAR *)bCurrentDirectory);
+	GetModuleFileName(NULL, bCurrentDirectory, MAX_PATH);
+	TCHAR *pChar = _tcsrchr(bCurrentDirectory, _T('\\'));
+	if(pChar != NULL)
+	{
+		*pChar = 0;
+	}
 	strCurrentDirectory.Format(_T("%s\\"),bCurrentDirectory);
 
 	CIniFile Ini((CONST PCHAR)(strCurrentDirectory + strFileName).GetBuffer(0));
