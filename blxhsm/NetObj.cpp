@@ -66,7 +66,7 @@ bool CNetObj::Init()
 
 
     //发送密码验证指令
-    if (!SendCmd(bCmd, uiCmdLen, bRev, &uiRevLen, &uiRet))
+    if (!SendCmd((unsigned char *)&reqest, uiCmdLen, bRev, &uiRevLen, &uiRet))
     {
         return false;
     }

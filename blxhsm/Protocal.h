@@ -13,7 +13,8 @@ typedef struct  Response_st
 {
 	unsigned int r1;
 	unsigned int r2;
-	unsigned int r3;
+	unsigned int errorCode;
+	unsigned int dataLength;
 } Response;
 
 #endif // Protocal_h__
