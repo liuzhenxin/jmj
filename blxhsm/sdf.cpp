@@ -100,7 +100,7 @@ END:
 }
 SGD_RV __cdecl SDF_CloseDevice(SGD_HANDLE hDeviceHandle)
 {
-
+	CTP.DelDeviceSessions((SGD_UINT32)hDeviceHandle);
     return 0;
 }
 

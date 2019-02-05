@@ -20,6 +20,8 @@ public:
 	bool DelSession(SGD_UINT32 uiSessionID);
 	bool LockSession(SGD_HANDLE hSession);
 	bool UnLockSession(SGD_HANDLE uiSessionID);
+	//删除uiDevHandle设备对应的sessions
+	bool DelDeviceSessions(SGD_UINT32 uiDevHandle);
 	// 关闭全部session连接
 	void  ClearAllSessions();
 private:

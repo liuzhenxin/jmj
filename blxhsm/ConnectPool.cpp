@@ -1,11 +1,13 @@
 #include "ConnectPool.h"
 #include <algorithm>
 
+//#include "log.h"
+
 bool CConnectPool::CreateSession(CNetObj nObj,SGD_UINT32 uiDevHandle){
 
 	if (!nObj.IsInit()) return false;
 
-    CSessionObj sObj(nObj);
+	CSessionObj sObj(nObj);
 
 	if (sObj.Init(uiDevHandle)) AddSession(sObj);
 	else return false;
@@ -56,7 +58,7 @@ bool CConnectPool::LockSession(SGD_HANDLE hSession){
 	SGD_UINT32 uiSessionHandle = 0;
 
 	memcpy(&uiSessionHandle,&hSession,4);
-	
+
 	for (int i = 0;i != vCSP.size();i++){
 		if (vCSP[i].SessionHandle == uiSessionHandle && vCSP[i].PoolLock == 0){
 			vCSP[i].PoolLock = 1;
@@ -67,7 +69,7 @@ bool CConnectPool::LockSession(SGD_HANDLE hSession){
 }
 
 bool CConnectPool::UnLockSession(SGD_HANDLE hSession){
-	
+
 	SGD_UINT32 uiSessionHandle = 0;
 
 	memcpy(&uiSessionHandle,&hSession,4);
@@ -80,22 +82,68 @@ bool CConnectPool::UnLockSession(SGD_HANDLE hSession){
 	}
 
 	return false;
-	
+}
 
+bool CConnectPool::DelDeviceSessions(SGD_UINT32 uiDevHandle)
+{
+	bool ret = false;
+	for_each(vCSP.begin(), vCSP.end(),[uiDevHandle](CSessionObj obj){
+		if(obj.DevcieHandle == uiDevHandle)
+		{
+			if(obj.PoolLock == 0)//非锁定状态
+			{		
+				obj.Finalize();
+			}
+			else
+			{
+				//LogMessage_tt("ConnectPool.cpp", __LINE__, 1, "锁定状态的session不允许删除！");				
+			}
+		}
+		});
+
+	return true;
 }
 
 void CConnectPool::ClearAllSessions()
 {
-    for_each(vCSP.begin(), vCSP.end(), [](CSessionObj obj)->bool{ return obj.Finalize();});
+	for_each(vCSP.begin(), vCSP.end(), [](CSessionObj obj)->bool{ return obj.Finalize();});
 }
 
 bool CConnectPool::DelSession(SGD_UINT32 uiSessionID){
+
+	bool ret = false;
+	auto iter = find_if(vCSP.begin(), vCSP.end(),[uiSessionID](CSessionObj obj)->bool {
+		if(obj.SessionHandle == uiSessionID)
+		{
+			if(obj.PoolLock == 0)//非锁定状态
+			{
+				return true;
+			}
+			else
+			{
+				//LogMessage_tt("ConnectPool.cpp", __LINE__, 1, "锁定状态的session不允许删除！");
+				return false;
+			}
+		}
+	});
+	if(iter != vCSP.end())
+	{
+		iter->Finalize(); //关闭socket连接
+		vCSP.erase(iter);
+
+		ret = true;
+	}
+	else
+	{
+		//LogMessage_tt("ConnectPool.cpp", __LINE__, 1, "没有找到uiSessionID对应的Session对象！");
+	}
+
 	return true;
 }
 
 bool CConnectPool::AddSession(CSessionObj sObj){
-	
+
 	vCSP.push_back(sObj);
-	
+
 	return true;
 }
