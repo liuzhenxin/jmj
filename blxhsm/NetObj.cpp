@@ -1,15 +1,15 @@
-#include "NetObj.h"
+ï»¿#include "NetObj.h"
 #include "Protocal.h"
+#include <tchar.h>
 
 
-CNetObj::CNetObj(void)
-{
+
+CNetObj::CNetObj(void) {
 
     SocketID = INVALID_SOCKET;
 }
 
-CNetObj::CNetObj(string ip, int port, string pwd)
-{
+CNetObj::CNetObj(string ip, int port, string pwd) {
 
     this->ip = ip;
     this->port = port;
@@ -18,9 +18,8 @@ CNetObj::CNetObj(string ip, int port, string pwd)
     SocketID = INVALID_SOCKET;
 }
 
-/*³õÊ¼»¯socketÁ¬½Ó*/
-bool CNetObj::Init()
-{
+/*åˆå§‹åŒ–socketè¿æ¥*/
+bool CNetObj::Init() {
 
     unsigned char bCmd[64] = {0};
     unsigned char bRev[64] = {0};
@@ -33,46 +32,73 @@ bool CNetObj::Init()
     WORD sockVersion = MAKEWORD(2, 2);
 
     WSADATA data;
-    if (WSAStartup(sockVersion, &data) != 0)
-    {
+    if (WSAStartup(sockVersion, &data) != 0) {
         return false;
     }
 
     SOCKET sc = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (sc == INVALID_SOCKET)
-    {
+    if (sc == INVALID_SOCKET) {
         return false;
     }
+
+    BOOL block = FALSE;
+    ioctlsocket(sc, FIONBIO, (unsigned long *)&block);
+
+    struct fd_set wfs;
+    FD_ZERO(&wfs);
+    FD_SET(sc, &wfs);
 
     sockaddr_in serAddr;
     serAddr.sin_family = AF_INET;
     serAddr.sin_port = htons(port);
     serAddr.sin_addr.S_un.S_addr = inet_addr(ip.c_str());
-    if (connect(sc, (sockaddr *)&serAddr, sizeof(serAddr)) == SOCKET_ERROR)
-    {
-        //Á¬½ÓÊ§°Ü
-        closesocket(sc);
+    connect(sc, (sockaddr *)&serAddr, sizeof(serAddr));
+
+    //è®¾ç½®ç­‰å¾…æ—¶é—´
+    struct timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = 5000000;
+
+    int ret = select(0, NULL, &wfs, NULL, &tv);
+    switch(ret) {
+    case 0:
+        OutputDebugString(_T("timeÂ out\n"));
         return false;
+    case SOCKET_ERROR:
+        OutputDebugString(_T("error\n"));
+        return false;
+    default:
+        OutputDebugString(_T("connected\n"));
     }
+
+    ////è®¾ç½®å‘é€è¶…æ—¶6ç§’
+    //int timeOut = 6000;
+    //if(setsockopt(sc,SOL_SOCKET,SO_SNDTIMEO,(char *)&timeOut,sizeof(timeOut)) == SOCKET_ERROR) {
+    //    return 0;
+    //}
+
+    ////è®¾ç½®æ¥æ”¶è¶…æ—¶6ç§’
+    //timeOut = 6000;
+    //if(setsockopt(sc,SOL_SOCKET,SO_RCVTIMEO,(char *)&timeOut,sizeof(timeOut)) == SOCKET_ERROR) {
+    //    return 0;
+    //}
 
     SocketID = sc;
-  
-	Request reqest = {0};
-	uiCmdLen = 0x3c;
-	reqest.commandLen = uiCmdLen;
-	reqest.taskSN = uiTaskSN;
-	reqest.command = uiCmd;
-	memcpy(reqest.commandData, pwd.c_str(), strlen(pwd.c_str()));
+
+    Request reqest = {0};
+    uiCmdLen = 0x3c;
+    reqest.commandLen = uiCmdLen;
+    reqest.taskSN = uiTaskSN;
+    reqest.command = uiCmd;
+    memcpy(reqest.commandData, pwd.c_str(), strlen(pwd.c_str()));
 
 
-    //·¢ËÍÃÜÂëÑéÖ¤Ö¸Áî
-    if (!SendCmd((unsigned char *)&reqest, uiCmdLen, bRev, &uiRevLen, &uiRet))
-    {
+    //å‘é€å¯†ç éªŒè¯æŒ‡ä»¤
+    if (!SendCmd((unsigned char *)&reqest, uiCmdLen, bRev, &uiRevLen, &uiRet)) {
         return false;
     }
 
-    if (uiRet != 0)
-    {
+    if (uiRet != 0) {
         return false;
     }
 
@@ -82,18 +108,16 @@ bool CNetObj::Init()
     return true;
 }
 
-bool CNetObj::SendCmd(unsigned char *pcCmd, unsigned int uiCmdLen, unsigned char *pcRev, unsigned int *puiRevLen, unsigned int *puiRet)
-{
+bool CNetObj::SendCmd(unsigned char *pcCmd, unsigned int uiCmdLen, unsigned char *pcRev, unsigned int *puiRevLen, unsigned int *puiRet) {
 
     unsigned char bRev[4096 + 32] = {0};
 
-      if (send(SocketID, (const char *)pcCmd, uiCmdLen, 0) < 0)
+    if (send(SocketID, (const char *)pcCmd, uiCmdLen, 0) < 0)
         return false;
 
     int rLen = recv(SocketID, (char *)bRev, 4096 + 32, 0);
 
-    if (rLen <= 0)
-    {
+    if (rLen <= 0) {
         return false;
     }
 
@@ -104,27 +128,21 @@ bool CNetObj::SendCmd(unsigned char *pcCmd, unsigned int uiCmdLen, unsigned char
     return true;
 }
 
-bool CNetObj::IsInit()
-{
+bool CNetObj::IsInit() {
     return isInit;
 }
 
-bool CNetObj::Finalize()
-{
+bool CNetObj::Finalize() {
     bool retValue = false;
 
-    if (SocketID != INVALID_SOCKET)
-    {
-        if (closesocket(SocketID) != SOCKET_ERROR)
-        {
+    if (SocketID != INVALID_SOCKET) {
+        if (closesocket(SocketID) != SOCKET_ERROR) {
             SocketID = INVALID_SOCKET;
             isInit = false;
 
             retValue = true;
         }
-    }
-    else
-    {
+    } else {
         retValue = true;
     }
 
