@@ -1,6 +1,10 @@
-﻿#include "NetObj.h"
+#include "NetObj.h"
 #include "Protocal.h"
 #include <tchar.h>
+
+#define GOOGLE_GLOG_DLL_DECL //glog静态链接库需要
+#include "glog/logging.h"
+#include "glog/log_severity.h"
 
 
 
@@ -33,6 +37,7 @@ bool CNetObj::Init() {
 
     WSADATA data;
     if (WSAStartup(sockVersion, &data) != 0) {
+        LOG(ERROR) << "WSAStartup失败" << ":" << WSAGetLastError();
         return false;
     }
 
@@ -57,18 +62,19 @@ bool CNetObj::Init() {
     //设置等待时间
     struct timeval tv;
     tv.tv_sec = 0;
-    tv.tv_usec = 5000000;
+    tv.tv_usec = 15000000;
 
     int ret = select(0, NULL, &wfs, NULL, &tv);
     switch(ret) {
     case 0:
-        OutputDebugString(_T("time out\n"));
+        LOG(WARNING) << "连接" << ip << ":" << port << "超时!";
         return false;
     case SOCKET_ERROR:
-        OutputDebugString(_T("error\n"));
+        LOG(ERROR) << "连接" << ip << ":" << port << "SOCKET_ERROR" << ":" << WSAGetLastError();
         return false;
     default:
-        OutputDebugString(_T("connected\n"));
+        LOG(INFO) << "连接" << ip << ":" << port << "成功!";
+        break;
     }
 
     ////设置发送超时6秒
