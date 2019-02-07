@@ -13,6 +13,10 @@ const server = net.createServer((client) => {
         console.log('client disconnected');
     });
 
+    client.on('error', (err)=>{
+        console.log(err.toString());
+    });
+
 
 });
 server.on('error', (err) => {
