@@ -28,6 +28,9 @@ SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin)
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../bin)
 
 
+include_directories(../include)
+link_directories(../../lib)
+
 #添加一个可执行程序
 #语法：add_executable( 程序名 源代码文件 ）
 add_executable( APITEST ${src} ${HeaderFiles} ${CommonHeaderFiles} ${INIFile} ${RC_FILES})

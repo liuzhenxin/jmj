@@ -112,6 +112,9 @@ bool CConnectPool::DelSession(SGD_UINT32 uiSessionID) {
                 return false;
             }
         }
+
+        //LogMessage_tt("ConnectPool.cpp", __LINE__, 1, "不存在uiSessionID对应的session对象！");
+        return false;
     });
     if(iter != vCSP.end()) {
         iter->Finalize(); //关闭socket连接
