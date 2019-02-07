@@ -4,28 +4,51 @@
 //#include "SessionObj.h"
 #include <iostream>
 #include <map>
-#include "log.h"
+
+#define GOOGLE_GLOG_DLL_DECL //glog静态链接库需要
+#include "glog/logging.h"
+#include "glog/log_severity.h"
+
+#ifdef _WIN32
+#include <direct.h>
+#else
+#include <unistd.h>
+#endif
+
+
+//#include "log.h"
 #include "ConnectPool.h"
 #include <Windows.h>
 #include "typedef_exception.h"
 #include "INIParser.h"
 #include "ErrorCode.h"
 
-//BOOL APIENTRY DllMain( HMODULE hModule,
-//					  DWORD  ul_reason_for_call,
-//					  LPVOID lpReserved
-//					  )
-//{
-//	switch (ul_reason_for_call)
-//	{
-//	case DLL_PROCESS_ATTACH:
-//	case DLL_THREAD_ATTACH:
-//	case DLL_THREAD_DETACH:
-//	case DLL_PROCESS_DETACH:
-//		break;
-//	}
-//	return TRUE;
-//}
+void LogMessage_tt(char *sFile,int nLine,unsigned int unErrCode, char *sMessage) {
+
+}
+
+BOOL APIENTRY DllMain( HMODULE hModule,
+                       DWORD  ul_reason_for_call,
+                       LPVOID lpReserved
+                     ) {
+    switch (ul_reason_for_call) {
+    case DLL_PROCESS_ATTACH: {
+        char *fileName = getcwd(nullptr, 0);
+        FLAGS_log_dir = fileName;
+        google::InitGoogleLogging((std::string(fileName)+"\\blxhsm.dll").c_str());
+        free(fileName);
+    }
+    break;
+    case DLL_THREAD_ATTACH:
+        break;
+    case DLL_THREAD_DETACH:
+        break;
+    case DLL_PROCESS_DETACH:
+        google::ShutdownGoogleLogging();
+        break;
+    }
+    return TRUE;
+}
 
 CConnectPool CTP;
 int poolsize;
@@ -79,6 +102,8 @@ SGD_RV __cdecl SDF_OpenDevice(SGD_HANDLE *phDeviceHandle) {
             rv = SWR_CONNECT_ERR;
             goto END;
         }
+
+        LOG(INFO) << "session 连接创建成功";
 
         CTP.CreateSession(nObj, hDev);
     }
