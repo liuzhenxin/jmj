@@ -1,6 +1,10 @@
 #include "ConnectPool.h"
 #include <algorithm>
 
+#define GOOGLE_GLOG_DLL_DECL //glogé™æ€é“¾æ¥åº“éœ€è¦
+#include "glog/logging.h"
+#include "glog/log_severity.h"
+
 //#include "log.h"
 
 bool CConnectPool::CreateSession(CNetObj nObj,SGD_UINT32 uiDevHandle) {
@@ -82,18 +86,32 @@ bool CConnectPool::UnLockSession(SGD_HANDLE hSession) {
 }
 
 bool CConnectPool::DelDeviceSessions(SGD_UINT32 uiDevHandle) {
-    bool ret = false;
-    for_each(vCSP.begin(), vCSP.end(),[uiDevHandle](CSessionObj obj) {
-        if(obj.DevcieHandle == uiDevHandle) {
-            if(obj.PoolLock == 0) { //·ÇËø¶¨×´Ì¬
-                obj.Finalize();
-            } else {
-                //LogMessage_tt("ConnectPool.cpp", __LINE__, 1, "Ëø¶¨×´Ì¬µÄsession²»ÔÊĞíÉ¾³ı£¡");
-            }
-        }
-    });
 
-    return true;
+    bool ret = true;
+    while (true) {
+        auto iter = find_if(vCSP.begin(), vCSP.end(),[uiDevHandle, ret] (CSessionObj obj) mutable ->bool{
+            if(obj.DevcieHandle == uiDevHandle) {
+                if(obj.PoolLock == 0) { //éé”å®šçŠ¶æ€
+                    obj.Finalize();
+                    LOG(INFO) << "å…³é—­Sessionå¯¹è±¡" << obj.SessionHandle;
+                    return true;
+                } else {
+                    LOG(ERROR) << "Sessionå¯¹è±¡" << obj.SessionHandle << "å¤„äºé”å®šçŠ¶æ€ï¼";
+                    ret = false;
+                    return false;
+                }
+            }
+            return false;
+        });
+        if(iter != vCSP.end()) {
+            vCSP.erase(iter);
+        } else {
+            break;
+        }
+    }
+
+
+    return ret;
 }
 
 void CConnectPool::ClearAllSessions() {
@@ -105,24 +123,24 @@ bool CConnectPool::DelSession(SGD_UINT32 uiSessionID) {
     bool ret = false;
     auto iter = find_if(vCSP.begin(), vCSP.end(),[uiSessionID](CSessionObj obj)->bool {
         if(obj.SessionHandle == uiSessionID) {
-            if(obj.PoolLock == 0) { //·ÇËø¶¨×´Ì¬
+            if(obj.PoolLock == 0) { //éé”å®šçŠ¶æ€
                 return true;
             } else {
-                //LogMessage_tt("ConnectPool.cpp", __LINE__, 1, "Ëø¶¨×´Ì¬µÄsession²»ÔÊĞíÉ¾³ı£¡");
+                //LogMessage_tt("ConnectPool.cpp", __LINE__, 1, "é”å®šçŠ¶æ€çš„sessionä¸å…è®¸åˆ é™¤ï¼");
                 return false;
             }
         }
 
-        //LogMessage_tt("ConnectPool.cpp", __LINE__, 1, "²»´æÔÚuiSessionID¶ÔÓ¦µÄsession¶ÔÏó£¡");
+        //LogMessage_tt("ConnectPool.cpp", __LINE__, 1, "ä¸å­˜åœ¨uiSessionIDå¯¹åº”çš„sessionå¯¹è±¡ï¼");
         return false;
     });
     if(iter != vCSP.end()) {
-        iter->Finalize(); //¹Ø±ÕsocketÁ¬½Ó
+        iter->Finalize(); //å…³é—­socketè¿æ¥
         vCSP.erase(iter);
 
         ret = true;
     } else {
-        //LogMessage_tt("ConnectPool.cpp", __LINE__, 1, "Ã»ÓĞÕÒµ½uiSessionID¶ÔÓ¦µÄSession¶ÔÏó£¡");
+        //LogMessage_tt("ConnectPool.cpp", __LINE__, 1, "æ²¡æœ‰æ‰¾åˆ°uiSessionIDå¯¹åº”çš„Sessionå¯¹è±¡ï¼");
     }
 
     return true;
