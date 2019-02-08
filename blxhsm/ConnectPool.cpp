@@ -82,6 +82,7 @@ bool CConnectPool::UnLockSession(SGD_HANDLE hSession) {
         }
     }
 
+    LOG(WARNING) << "没有找到Session对象"<< hSession;
     return false;
 }
 
@@ -91,19 +92,22 @@ bool CConnectPool::DelDeviceSessions(SGD_UINT32 uiDevHandle) {
     while (true) {
         auto iter = find_if(vCSP.begin(), vCSP.end(),[uiDevHandle, ret] (CSessionObj obj) mutable ->bool{
             if(obj.DevcieHandle == uiDevHandle) {
-                if(obj.PoolLock == 0) { //非锁定状态
-                    obj.Finalize();
-                    LOG(INFO) << "关闭Session对象" << obj.SessionHandle;
-                    return true;
-                } else {
-                    LOG(ERROR) << "Session对象" << obj.SessionHandle << "处于锁定状态！";
-                    ret = false;
-                    return false;
-                }
+                //if(obj.PoolLock == 0) { //非锁定状态
+                ret = obj.Finalize();
+                LOG(INFO) << "关闭DeviceHandle " << uiDevHandle << " 包含的Session对象 " << obj.SessionHandle << (ret?"成功":"失败");
+                return true;
+                /*} else {
+                LOG(ERROR) << "Session对象" << obj.SessionHandle << "处于锁定状态！";
+                ret = false;
+                return false;
+                }*/
             }
             return false;
         });
         if(iter != vCSP.end()) {
+            if(!ret) {
+                break;
+            }
             vCSP.erase(iter);
         } else {
             break;

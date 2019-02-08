@@ -42,6 +42,7 @@ bool CSessionObj::Init(SGD_UINT32 uiDeviceHandle) {
 }
 
 SGD_RV CSessionObj::SDF_GetDeviceInfo(DEVICEINFO *pstDeviceInfo) {
+
     SGD_RV rv = SDR_OK;
     SGD_UCHAR bCmd[64] = {0};
     SGD_UCHAR bRev[256] = {0};
@@ -57,7 +58,7 @@ SGD_RV CSessionObj::SDF_GetDeviceInfo(DEVICEINFO *pstDeviceInfo) {
     memcpy(bCmd + 4, &uiTaskSN, 4);
     memcpy(bCmd + 4 + 4, "\x01\x00\x02\x00", 4);
 
-    nObj.SendCmd(bCmd, uiCmdLen, bRev, &uiRevLen, &uiRet);
+    rv = nObj.SendCmd(bCmd, uiCmdLen, bRev, &uiRevLen, &uiRet);
 
     if (uiRet != 0) {
         rv = uiRet;
@@ -87,7 +88,7 @@ SGD_RV CSessionObj::SDF_GenerateRandom(SGD_UINT32 uiLength, SGD_UCHAR *pucRandom
     memcpy(bCmd + 4 + 4, "\x02\x00\x02\x00", 4);
     memcpy(bCmd + 4 + 4 + 4, &uiLength, 4);
 
-    nObj.SendCmd(bCmd, uiCmdLen, bRev, &uiRevLen, &uiRet);
+    rv = nObj.SendCmd(bCmd, uiCmdLen, bRev, &uiRevLen, &uiRet);
 
     if (uiRet != 0) {
         rv = uiRet;
@@ -118,6 +119,7 @@ SGD_RV CSessionObj::SDF_GenerateKeyPair_RSA(SGD_UINT32 uiKeyBits, RSArefPublicKe
     return 0;
 }
 SGD_RV CSessionObj::SDF_ExportSignPublicKey_RSA(SGD_UINT32 uiKeyIndex, RSArefPublicKey *pucPublicKey) {
+
     SGD_RV rv = SDR_OK;
     SGD_UCHAR bCmd[64] = {0};
     SGD_UCHAR bRev[1024 + 32] = {0};
@@ -135,8 +137,8 @@ SGD_RV CSessionObj::SDF_ExportSignPublicKey_RSA(SGD_UINT32 uiKeyIndex, RSArefPub
     memcpy(bCmd + 4 + 4 + 4, &uiKeyIndex, 4);
     memcpy(bCmd + 4 + 4 + 4 + 4, "\x00\x02\x01\x00", 4);
 
-    if (!nObj.SendCmd(bCmd, uiCmdLen, bRev, &uiRevLen, &uiRet)) {
-        rv = SWR_SOCKET_SEND_ERR;
+    rv = nObj.SendCmd(bCmd, uiCmdLen, bRev, &uiRevLen, &uiRet);
+    if (rv != SDR_OK) {
         return rv;
     }
 
@@ -150,6 +152,7 @@ SGD_RV CSessionObj::SDF_ExportSignPublicKey_RSA(SGD_UINT32 uiKeyIndex, RSArefPub
 }
 
 SGD_RV CSessionObj::SDF_ExportEncPublicKey_RSA(SGD_UINT32 uiKeyIndex, RSArefPublicKey *pucPublicKey) {
+
     SGD_RV rv = SDR_OK;
     SGD_UCHAR bCmd[64] = {0};
     SGD_UCHAR bRev[1024 + 32] = {0};
@@ -167,8 +170,9 @@ SGD_RV CSessionObj::SDF_ExportEncPublicKey_RSA(SGD_UINT32 uiKeyIndex, RSArefPubl
     memcpy(bCmd + 4 + 4 + 4, &uiKeyIndex, 4);
     memcpy(bCmd + 4 + 4 + 4 + 4, "\x00\x01\x01\x00", 4);
 
-    if (!nObj.SendCmd(bCmd, uiCmdLen, bRev, &uiRevLen, &uiRet)) {
-        rv = SWR_SOCKET_SEND_ERR;
+    rv = nObj.SendCmd(bCmd, uiCmdLen, bRev, &uiRevLen, &uiRet);
+
+    if (rv != SDR_OK) {
         return rv;
     }
 
@@ -180,6 +184,7 @@ SGD_RV CSessionObj::SDF_ExportEncPublicKey_RSA(SGD_UINT32 uiKeyIndex, RSArefPubl
 
     return rv;
 }
+
 SGD_RV CSessionObj::SDF_ExternalPublicKeyOperation_RSA(RSArefPublicKey *pucPublicKey, SGD_UCHAR *pucDataInput, SGD_UINT32 uiInputLength, SGD_UCHAR *pucDataOutput, SGD_UINT32 *puiOutputLength) {
     return 0;
 }

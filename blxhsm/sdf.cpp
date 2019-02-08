@@ -16,15 +16,10 @@
 #endif
 
 
-//#include "log.h"
 #include "ConnectPool.h"
 #include <Windows.h>
 #include "typedef_exception.h"
 #include "INIParser.h"
-
-void LogMessage_tt(char *sFile,int nLine,unsigned int unErrCode, char *sMessage) {
-
-}
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
@@ -115,7 +110,8 @@ END:
 SGD_RV __cdecl SDF_CloseDevice(SGD_HANDLE hDeviceHandle) {
 
     SGD_RV rv = SDR_OK;
-    if(CTP.DelDeviceSessions((SGD_UINT32)hDeviceHandle)) {
+    if(!CTP.DelDeviceSessions((SGD_UINT32)hDeviceHandle)) {
+        rv = SDR_UNKNOWERR;
     }
     return rv;
 }
@@ -136,8 +132,8 @@ GET:
 
         CNetObj nObj(ip, port, passwd);
 
-        if (!nObj.Init()) {
-            rv = SWR_CONNECT_ERR;
+        rv = nObj.Init();
+        if (rv != SDR_OK) {
             goto END;
         }
 
@@ -173,7 +169,7 @@ SGD_RV __cdecl SDF_GetPrivateKeyAccessRight(SGD_HANDLE hSessionHandle, SGD_UINT3
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_GetPrivateKeyAccessRight");
+        LOG(ERROR) << "SDF_GetPrivateKeyAccessRight exception";
     }
 
     return rv;
@@ -191,7 +187,7 @@ SGD_RV __cdecl SDF_ReleasePrivateKeyAccessRight(SGD_HANDLE hSessionHandle, SGD_U
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ReleasePrivateKeyAccessRight");
+        LOG(ERROR) << "SDF_ReleasePrivateKeyAccessRight exception";
     }
 
     return rv;
@@ -210,7 +206,7 @@ SGD_RV __cdecl SDF_GetDeviceInfo(SGD_HANDLE hSessionHandle, DEVICEINFO *pstDevic
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_GetDeviceInfo");
+        LOG(ERROR) << "SDF_GetDeviceInfo exception";
     }
 
     return rv;
@@ -229,13 +225,14 @@ SGD_RV __cdecl SDF_GenerateRandom(SGD_HANDLE hSessionHandle, SGD_UINT32 uiLength
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_GenerateRandom");
+        LOG(ERROR) << "SDF_GenerateRandom exception";
     }
 
     return rv;
 }
 
 SGD_RV SDF_GetKeyStatus(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyType, SGD_UINT32 *puiKeyStatus, SGD_UINT32 *puiKeyCount) {
+
     SGD_RV rv = SDR_OK;
 
     try {
@@ -247,7 +244,7 @@ SGD_RV SDF_GetKeyStatus(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyType, SGD_UIN
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_GetKeyStatus");
+        LOG(ERROR) << "SDF_GetKeyStatus exception";
     }
 
     return rv;
@@ -265,14 +262,15 @@ SGD_RV SDF_GetDeviceRunStatus(SGD_HANDLE hSessionHandle, DEVICE_RUN_STATUS *pstD
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_GetDeviceRunStatus");
+        LOG(ERROR) << "SDF_GetDeviceRunStatus exception";
     }
 
     return rv;
 }
 
 /*非对称密码RSA密钥管理、运算函数*/
-SGD_RV __cdecl SDF_GenerateKeyPair_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyBits, RSArefPublicKey *pucPublicKey, RSArefPrivateKey *pucPrivateKey) {
+SGD_RV __cdecl SDF_GenerateKeyPair_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyBits,
+                                       RSArefPublicKey *pucPublicKey, RSArefPrivateKey *pucPrivateKey) {
     SGD_RV rv = SDR_OK;
 
     try {
@@ -284,7 +282,7 @@ SGD_RV __cdecl SDF_GenerateKeyPair_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiK
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_GenerateKeyPair_RSA");
+        LOG(ERROR) << "SDF_GenerateKeyPair_RSA exception";
     }
 
     return rv;
@@ -304,13 +302,14 @@ SGD_RV __cdecl SDF_ExportSignPublicKey_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ExportSignPublicKey_RSA");
+        LOG(ERROR) << "SDF_ExportSignPublicKey_RSA exception";
     }
 
     return rv;
 }
 
 SGD_RV __cdecl SDF_ExportEncPublicKey_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIndex, RSArefPublicKey *pucPublicKey) {
+
     SGD_RV rv = SDR_OK;
 
     try {
@@ -322,11 +321,12 @@ SGD_RV __cdecl SDF_ExportEncPublicKey_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32 
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ExportEncPublicKey_RSA");
+        LOG(ERROR) << "SDF_ExportEncPublicKey_RSA exception";
     }
 
     return rv;
 }
+
 SGD_RV SDF_ExternalPublicKeyOperation_RSA(SGD_HANDLE hSessionHandle, RSArefPublicKey *pucPublicKey,
         SGD_UCHAR *pucDataInput, SGD_UINT32 uiInputLength, SGD_UCHAR *pucDataOutput, SGD_UINT32 *puiOutputLength) {
     SGD_RV rv = SDR_OK;
@@ -340,7 +340,7 @@ SGD_RV SDF_ExternalPublicKeyOperation_RSA(SGD_HANDLE hSessionHandle, RSArefPubli
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ExternalPublicKeyOperation_RSA");
+        LOG(ERROR) << "SDF_ExternalPublicKeyOperation_RSA exception";
     }
 
     return rv;
@@ -360,7 +360,7 @@ SGD_RV SDF_ExternalPrivateKeyOperation_RSA(SGD_HANDLE hSessionHandle, RSArefPriv
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ExternalPrivateKeyOperation_RSA");
+        LOG(ERROR) << "SDF_ExternalPrivateKeyOperation_RSA exception";
     }
 
     return rv;
@@ -379,7 +379,7 @@ SGD_RV SDF_InternalPublicKeyOperation_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32 
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_InternalPublicKeyOperation_RSA");
+        LOG(ERROR) << "SDF_InternalPublicKeyOperation_RSA exception";
     }
 
     return rv;
@@ -393,12 +393,12 @@ SGD_RV SDF_InternalPrivateKeyOperation_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32
         CSessionObj *sObj = CTP.GetLockSession(hSessionHandle);
 
         if (NULL != sObj) {
-            rv = sObj->SDF_InternalPrivateKeyOperation_RSA(uiKeyIndex, uiKeyUsage, pucDataInput, uiInputLength,pucDataOutput, puiOutputLength);
+            rv = sObj->SDF_InternalPrivateKeyOperation_RSA(uiKeyIndex, uiKeyUsage, pucDataInput, uiInputLength, pucDataOutput, puiOutputLength);
         } else {
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_InternalPrivateKeyOperation_RSA");
+        LOG(ERROR) << "SDF_InternalPrivateKeyOperation_RSA exception";
     }
 
     return rv;
@@ -417,7 +417,7 @@ SGD_RV SDF_ExchangeDigitEnvelopeBaseOnRSA(SGD_HANDLE hSessionHandle, SGD_UINT32 
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ExchangeDigitEnvelopeBaseOnRSA");
+        LOG(ERROR) << "SDF_ExchangeDigitEnvelopeBaseOnRSA exception";
     }
 
     return rv;
@@ -437,7 +437,7 @@ SGD_RV SDF_GenerateKeyPair_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32 uiAlgID,
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_GenerateKeyPair_ECC");
+        LOG(ERROR) << "SDF_GenerateKeyPair_ECC exception";
     }
 
     return rv;
@@ -455,7 +455,7 @@ SGD_RV SDF_ExportSignPublicKey_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIn
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ExportSignPublicKey_ECC");
+        LOG(ERROR) << "SDF_ExportSignPublicKey_ECC exception";
     }
 
     return rv;
@@ -473,7 +473,7 @@ SGD_RV SDF_ExportEncPublicKey_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyInd
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ExportEncPublicKey_ECC");
+        LOG(ERROR) << "SDF_ExportEncPublicKey_ECC exception";
     }
 
     return rv;
@@ -490,10 +490,11 @@ SGD_RV SDF_ExternalSign_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32 uiAlgID,
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ExternalSign_ECC");
+        LOG(ERROR) << "SDF_ExternalSign_ECC exception";
     }
     return rv;
 }
+
 SGD_RV SDF_ExternalVerify_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32 uiAlgID,
                               ECCrefPublicKey *pucPublicKey, SGD_UCHAR *pucDataInput, SGD_UINT32 uiInputLength, ECCSignature *pucSignature) {
     SGD_RV rv = SDR_OK;
@@ -505,7 +506,7 @@ SGD_RV SDF_ExternalVerify_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32 uiAlgID,
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ExternalVerify_ECC");
+        LOG(ERROR) << "SDF_ExternalVerify_ECC exception";
     }
     return rv;
 }
@@ -521,7 +522,7 @@ SGD_RV SDF_InternalSign_ECC(SGD_HANDLE hSessionHandle,
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_InternalSign_ECC");
+        LOG(ERROR) << "SDF_InternalSign_ECC exception";
     }
     return rv;
 }
@@ -537,7 +538,7 @@ SGD_RV SDF_InternalVerify_ECC(SGD_HANDLE hSessionHandle,
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_InternalVerify_ECC");
+        LOG(ERROR) << "SDF_InternalVerify_ECC exception";
     }
     return rv;
 }
@@ -553,7 +554,7 @@ SGD_RV SDF_ExternalEncrypt_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32 uiAlgID,
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ExternalEncrypt_ECC");
+        LOG(ERROR) << "SDF_ExternalEncrypt_ECC exception";
     }
     return rv;
 }
@@ -569,7 +570,7 @@ SGD_RV SDF_ExternalDecrypt_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32 uiAlgID,
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ExternalDecrypt_ECC");
+        LOG(ERROR) << "SDF_ExternalDecrypt_ECC exception";
     }
     return rv;
 }
@@ -585,7 +586,7 @@ SGD_RV SDF_InternalEncrypt_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32 uiISKIndex,
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_InternalEncrypt_ECC");
+        LOG(ERROR) << "SDF_InternalEncrypt_ECC exception";
     }
     return rv;
 }
@@ -601,7 +602,7 @@ SGD_RV SDF_InternalDecrypt_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32 uiISKIndex,
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_InternalDecrypt_ECC");
+        LOG(ERROR) << "SDF_InternalDecrypt_ECC exception";
     }
     return rv;
 }
@@ -617,7 +618,7 @@ SGD_RV SDF_InternalSign_ECC_Ex(SGD_HANDLE hSessionHandle, SGD_UINT32 uiISKIndex,
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_InternalSign_ECC_Ex");
+        LOG(ERROR) << "SDF_InternalSign_ECC_Ex exception";
     }
     return rv;
 }
@@ -633,7 +634,7 @@ SGD_RV SDF_InternalVerify_ECC_Ex(SGD_HANDLE hSessionHandle, SGD_UINT32 uiISKInde
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_InternalVerify_ECC_Ex");
+        LOG(ERROR) << "SDF_InternalVerify_ECC_Ex exception";
     }
     return rv;
 }
@@ -652,7 +653,7 @@ SGD_RV SDF_GenerateAgreementDataWithECC(SGD_HANDLE hSessionHandle, SGD_UINT32 ui
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_GenerateAgreementDataWithECC");
+        LOG(ERROR) << "SDF_GenerateAgreementDataWithECC exception";
     }
     return rv;
 }
@@ -670,7 +671,7 @@ SGD_RV SDF_GenerateKeyWithECC(SGD_HANDLE hSessionHandle, SGD_UCHAR *pucResponseI
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_GenerateKeyWithECC");
+        LOG(ERROR) << "SDF_GenerateKeyWithECC exception";
     }
     return rv;
 }
@@ -690,7 +691,7 @@ SGD_RV SDF_GenerateAgreementDataAndKeyWithECC(SGD_HANDLE hSessionHandle, SGD_UIN
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_GenerateAgreementDataAndKeyWithECC");
+        LOG(ERROR) << "SDF_GenerateAgreementDataAndKeyWithECC exception";
     }
     return rv;
 }
@@ -706,7 +707,7 @@ SGD_RV SDF_ExchangeDigitEnvelopeBaseOnECC(SGD_HANDLE hSessionHandle, SGD_UINT32 
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ExchangeDigitEnvelopeBaseOnECC");
+        LOG(ERROR) << "SDF_ExchangeDigitEnvelopeBaseOnECC exception";
     }
     return rv;
 }
@@ -723,7 +724,7 @@ SGD_RV SDF_GenerateKeyWithIPK_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiIPKInd
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_GenerateKeyWithIPK_RSA");
+        LOG(ERROR) << "SDF_GenerateKeyWithIPK_RSA exception";
     }
     return rv;
 }
@@ -739,7 +740,7 @@ SGD_RV SDF_GenerateKeyWithEPK_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyBit
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_GenerateKeyWithEPK_RSA");
+        LOG(ERROR) << "SDF_GenerateKeyWithEPK_RSA exception";
     }
     return rv;
 }
@@ -755,7 +756,7 @@ SGD_RV SDF_GenerateKeyWithKEK(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyBits, S
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_GenerateKeyWithKEK");
+        LOG(ERROR) << "SDF_GenerateKeyWithKEK exception";
     }
     return rv;
 }
@@ -771,7 +772,7 @@ SGD_RV SDF_GenerateKeyWithIPK_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32 uiIPKInd
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_GenerateKeyWithIPK_ECC");
+        LOG(ERROR) << "SDF_GenerateKeyWithIPK_ECC exception";
     }
     return rv;
 }
@@ -787,7 +788,7 @@ SGD_RV SDF_GenerateKeyWithEPK_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyBit
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_GenerateKeyWithEPK_ECC");
+        LOG(ERROR) << "SDF_GenerateKeyWithEPK_ECC exception";
     }
     return rv;
 }
@@ -803,7 +804,7 @@ SGD_RV SDF_ImportKeyWithISK_RSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiISKIndex
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ImportKeyWithISK_RSA");
+        LOG(ERROR) << "SDF_ImportKeyWithISK_RSA exception";
     }
     return rv;
 }
@@ -819,7 +820,7 @@ SGD_RV SDF_ImportKeyWithKEK(SGD_HANDLE hSessionHandle, SGD_UINT32 uiAlgID, SGD_U
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ImportKeyWithKEK");
+        LOG(ERROR) << "SDF_ImportKeyWithKEK exception";
     }
     return rv;
 }
@@ -835,7 +836,7 @@ SGD_RV SDF_ImportKeyWithISK_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32 uiISKIndex
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ImportKeyWithISK_ECC");
+        LOG(ERROR) << "SDF_ImportKeyWithISK_ECC exception";
     }
     return rv;
 }
@@ -851,7 +852,7 @@ SGD_RV SDF_ImportKey(SGD_HANDLE hSessionHandle, SGD_UCHAR *pucKey, SGD_UINT32 ui
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ImportKey");
+        LOG(ERROR) << "SDF_ImportKey exception";
     }
     return rv;
 }
@@ -867,7 +868,7 @@ SGD_RV SDF_DestroyKey(SGD_HANDLE hSessionHandle, SGD_HANDLE hKeyHandle) {
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_DestroyKey");
+        LOG(ERROR) << "SDF_DestroyKey exception";
     }
     return rv;
 }
@@ -883,7 +884,7 @@ SGD_RV SDF_GetSymmKeyHandle(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIndex, SG
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_GetSymmKeyHandle");
+        LOG(ERROR) << "SDF_GetSymmKeyHandle exception";
     }
     return rv;
 }
@@ -899,7 +900,7 @@ SGD_RV SDF_Encrypt(SGD_HANDLE hSessionHandle, SGD_HANDLE hKeyHandle, SGD_UINT32 
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_Encrypt");
+        LOG(ERROR) << "SDF_Encrypt exception";
     }
     return rv;
 }
@@ -915,7 +916,7 @@ SGD_RV SDF_Decrypt(SGD_HANDLE hSessionHandle, SGD_HANDLE hKeyHandle, SGD_UINT32 
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_Decrypt");
+        LOG(ERROR) << "SDF_Decrypt exception";
     }
     return rv;
 }
@@ -931,7 +932,7 @@ SGD_RV SDF_CalculateMAC(SGD_HANDLE hSessionHandle, SGD_HANDLE hKeyHandle, SGD_UI
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_CalculateMAC");
+        LOG(ERROR) << "SDF_CalculateMAC exception";
     }
     return rv;
 }
@@ -948,7 +949,7 @@ SGD_RV SDF_HashInit(SGD_HANDLE hSessionHandle, SGD_UINT32 uiAlgID, ECCrefPublicK
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_HashInit");
+        LOG(ERROR) << "SDF_HashInit exception";
     }
     return rv;
 }
@@ -964,7 +965,7 @@ SGD_RV SDF_HashUpdate(SGD_HANDLE hSessionHandle, SGD_UCHAR *pucData, SGD_UINT32 
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_HashUpdate");
+        LOG(ERROR) << "SDF_HashUpdate exception";
     }
     return rv;
 }
@@ -980,7 +981,7 @@ SGD_RV SDF_HashFinal(SGD_HANDLE hSessionHandle, SGD_UCHAR *pucHash, SGD_UINT32 *
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_HashFinal");
+        LOG(ERROR) << "SDF_HashFinal exception";
     }
     return rv;
 }
@@ -997,7 +998,7 @@ SGD_RV SDF_CreateFile(SGD_HANDLE hSessionHandle, SGD_UCHAR *pucFileName, SGD_UIN
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_CreateFile");
+        LOG(ERROR) << "SDF_CreateFile exception";
     }
     return rv;
 }
@@ -1013,7 +1014,7 @@ SGD_RV SDF_ReadFile(SGD_HANDLE hSessionHandle, SGD_UCHAR *pucFileName, SGD_UINT3
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ReadFile");
+        LOG(ERROR) << "SDF_ReadFile exception";
     }
     return rv;
 }
@@ -1029,7 +1030,7 @@ SGD_RV SDF_WriteFile(SGD_HANDLE hSessionHandle, SGD_UCHAR *pucFileName, SGD_UINT
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_WriteFile");
+        LOG(ERROR) << "SDF_WriteFile exception";
     }
     return rv;
 }
@@ -1045,7 +1046,7 @@ SGD_RV SDF_DeleteFile(SGD_HANDLE hSessionHandle, SGD_UCHAR *pucFileName, SGD_UIN
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_DeleteFile");
+        LOG(ERROR) << "SDF_DeleteFile exception";
     }
     return rv;
 }
@@ -1062,7 +1063,7 @@ SGD_RV SDF_ImportECCKeyPair(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyNumber, E
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ImportECCKeyPair");
+        LOG(ERROR) << "SDF_ImportECCKeyPair exception";
     }
     return rv;
 }
@@ -1078,7 +1079,7 @@ SGD_RV SDF_InternalSignEx_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyNumber,
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_InternalSignEx_ECC");
+        LOG(ERROR) << "SDF_InternalSignEx_ECC exception";
     }
     return rv;
 }
@@ -1094,7 +1095,7 @@ SGD_RV SDF_ECCMultAdd(SGD_HANDLE hSessionHandle, SGD_UINT32 k, ECCrefPrivateKey 
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ECCMultAdd");
+        LOG(ERROR) << "SDF_ECCMultAdd exception";
     }
     return rv;
 }
@@ -1110,7 +1111,7 @@ SGD_RV SDF_ECCModMultAdd(SGD_HANDLE hSessionHandle, ECCrefPrivateKey *k, ECCrefP
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ECCModMultAdd");
+        LOG(ERROR) << "SDF_ECCModMultAdd exception";
     }
     return rv;
 }
@@ -1126,7 +1127,7 @@ SGD_RV SDF_ECCMultAdd2(SGD_HANDLE hSessionHandle, ECCrefPrivateKey *e1, ECCrefPu
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ECCMultAdd2");
+        LOG(ERROR) << "SDF_ECCMultAdd2 exception";
     }
     return rv;
 }
@@ -1142,7 +1143,7 @@ SGD_RV SDF_InternalSignEx2_ECC(SGD_HANDLE hSessionHandle, SGD_UINT32 uiISKIndex1
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_InternalSignEx2_ECC");
+        LOG(ERROR) << "SDF_InternalSignEx2_ECC exception";
     }
     return rv;
 }
@@ -1159,7 +1160,7 @@ SGD_RV SWCSM_GenerateRSAKeyPair(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyNumbe
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SWCSM_GenerateRSAKeyPair");
+        LOG(ERROR) << "SWCSM_GenerateRSAKeyPair exception";
     }
     return rv;
 }
@@ -1175,7 +1176,7 @@ SGD_RV SWCSM_InputRSAKeyPair(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyNumber, 
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SWCSM_InputRSAKeyPair");
+        LOG(ERROR) << "SWCSM_InputRSAKeyPair exception";
     }
     return rv;
 }
@@ -1191,7 +1192,7 @@ SGD_RV SWCSM_SetPrivateKeyAccessPwd(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyI
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SWCSM_SetPrivateKeyAccessPwd");
+        LOG(ERROR) << "SWCSM_SetPrivateKeyAccessPwd exception";
     }
     return rv;
 }
@@ -1207,7 +1208,7 @@ SGD_RV SWMF_GenerateRSAKeyPair(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyNumber
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SWMF_GenerateRSAKeyPair");
+        LOG(ERROR) << "SWMF_GenerateRSAKeyPair exception";
     }
     return rv;
 }
@@ -1223,7 +1224,7 @@ SGD_RV SWMF_InputRSAKeyPair(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyNumber, R
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SWMF_InputRSAKeyPair");
+        LOG(ERROR) << "SWMF_InputRSAKeyPair exception";
     }
     return rv;
 }
@@ -1239,7 +1240,7 @@ SGD_RV SWMF_SetPrivateKeyAccessPwd(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIn
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SWMF_SetPrivateKeyAccessPwd");
+        LOG(ERROR) << "SWMF_SetPrivateKeyAccessPwd exception";
     }
     return rv;
 }
@@ -1254,7 +1255,7 @@ SGD_RV SWMF_GenerateKEK(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyNumber, SGD_U
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SWMF_GenerateKEK");
+        LOG(ERROR) << "SWMF_GenerateKEK exception";
     }
     return rv;
 }
@@ -1269,7 +1270,7 @@ SGD_RV SWMF_InputKEK(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyNumber, SGD_UCHA
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SWMF_InputKEK");
+        LOG(ERROR) << "SWMF_InputKEK exception";
     }
     return rv;
 }
@@ -1285,7 +1286,7 @@ SGD_RV SWCSM_GenerateRSAKeyPairEx(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyNum
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SWCSM_GenerateRSAKeyPairEx");
+        LOG(ERROR) << "SWCSM_GenerateRSAKeyPairEx exception";
     }
     return rv;
 }
@@ -1313,7 +1314,7 @@ SGD_RV SDF_Encrypt_GCM(SGD_HANDLE hSessionHandle,
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_Encrypt_GCM");
+        LOG(ERROR) << "SDF_Encrypt_GCM exception";
     }
     return rv;
 }
@@ -1343,7 +1344,7 @@ SGD_RV SDF_Decrypt_GCM(SGD_HANDLE hSessionHandle,
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_Decrypt_GCM");
+        LOG(ERROR) << "SDF_Decrypt_GCM exception";
     }
     return rv; //输出，认证结果，1为认证通过，0为认证失败
 }
@@ -1359,7 +1360,7 @@ SGD_RV SDF_ExportSignPublicKey_DSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyIn
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ExportSignPublicKey_DSA");
+        LOG(ERROR) << "SDF_ExportSignPublicKey_DSA exception";
     }
     return rv;
 }
@@ -1375,7 +1376,7 @@ SGD_RV SDF_ExportEncPublicKey_DSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiKeyInd
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ExportEncPublicKey_DSA");
+        LOG(ERROR) << "SDF_ExportEncPublicKey_DSA exception";
     }
     return rv;
 }
@@ -1391,7 +1392,7 @@ SGD_RV SDF_InternalSign_DSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiISKIndex, SG
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_InternalSign_DSA");
+        LOG(ERROR) << "SDF_InternalSign_DSA exception";
     }
     return rv;
 }
@@ -1407,7 +1408,7 @@ SGD_RV SDF_InternalVerify_DSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiISKIndex, 
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_InternalVerify_DSA");
+        LOG(ERROR) << "SDF_InternalVerify_DSA exception";
     }
     return rv;
 }
@@ -1423,7 +1424,7 @@ SGD_RV SDF_GenerateKeyPair_DSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiAlgID, SG
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_GenerateKeyPair_DSA");
+        LOG(ERROR) << "SDF_GenerateKeyPair_DSA exception";
     }
     return rv;
 }
@@ -1439,7 +1440,7 @@ SGD_RV SDF_ExternalSign_DSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiAlgID, DSAre
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ExternalSign_DSA");
+        LOG(ERROR) << "SDF_ExternalSign_DSA exception";
     }
     return rv;
 }
@@ -1455,7 +1456,7 @@ SGD_RV SDF_ExternalVerify_DSA(SGD_HANDLE hSessionHandle, SGD_UINT32 uiAlgID, DSA
             rv = SWR_NO_AVAILABLE_HSM;
         }
     } catch (...) {
-        LogMessage_tt("sdf.cpp", 1, 1, "SDF_ExternalVerify_DSA");
+        LOG(ERROR) << "SDF_ExternalVerify_DSA exception";
     }
     return rv;
 }
