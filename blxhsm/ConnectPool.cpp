@@ -116,6 +116,7 @@ bool CConnectPool::DelDeviceSessions(SGD_UINT32 uiDevHandle) {
 
 void CConnectPool::ClearAllSessions() {
     for_each(vCSP.begin(), vCSP.end(), [](CSessionObj obj)->bool{ return obj.Finalize();});
+    vCSP.clear();
 }
 
 bool CConnectPool::DelSession(SGD_UINT32 uiSessionID) {

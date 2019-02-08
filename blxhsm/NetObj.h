@@ -8,28 +8,28 @@ using namespace std;
 
 class CNetObj {
 
-public:
-	UINT_PTR SocketID;
+  public:
+    UINT_PTR SocketID;
 
-private:
-	string ip;
-	string pwd;
-	int port;
+  private:
+    string ip;
+    string pwd;
+    int port;
 
-	bool isInit;
+    bool isInit;
 
-public:
-	CNetObj(string ip,int port,string pwd);
-	CNetObj(void);
+  public:
+    CNetObj(string ip,int port,string pwd);
+    CNetObj(void);
 
 
-public:
-	bool SendCmd(unsigned char * pcCmd,unsigned int uiCmdLen,unsigned char *pcRev, unsigned int *puiRevLen,unsigned int *puiRet);
-	bool Init();
-	bool IsInit();
-	
-	// 关闭socket连接
-	bool Finalize();
+  public:
+    unsigned int SendCmd(unsigned char * pcCmd,unsigned int uiCmdLen,unsigned char *pcRev, unsigned int *puiRevLen,unsigned int *puiRet);
+    unsigned int Init();
+    bool IsInit();
+
+    // 关闭socket连接
+    bool Finalize();
 
 };
 

@@ -1,10 +1,12 @@
 #include "NetObj.h"
 #include "Protocal.h"
+
 #include <tchar.h>
 
 #define GOOGLE_GLOG_DLL_DECL //glog静态链接库需要
 #include "glog/logging.h"
 #include "glog/log_severity.h"
+#include "sdf.h"
 
 
 
@@ -23,7 +25,7 @@ CNetObj::CNetObj(string ip, int port, string pwd) {
 }
 
 /*初始化socket连接*/
-bool CNetObj::Init() {
+unsigned int CNetObj::Init() {
 
     unsigned char bCmd[64] = {0};
     unsigned char bRev[64] = {0};
@@ -38,16 +40,16 @@ bool CNetObj::Init() {
     WSADATA data;
     if (WSAStartup(sockVersion, &data) != 0) {
         LOG(ERROR) << "WSAStartup失败" << ":" << WSAGetLastError();
-        return false;
+        return SWR_CONNECT_ERR;
     }
 
     SOCKET sc = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (sc == INVALID_SOCKET) {
-        return false;
+        return SWR_CONNECT_ERR;
     }
 
-    BOOL block = FALSE;
-    ioctlsocket(sc, FIONBIO, (unsigned long *)&block);
+    BOOL nonblock = TRUE;
+    ioctlsocket(sc, FIONBIO, (unsigned long *)&nonblock);
 
     struct fd_set wfs;
     FD_ZERO(&wfs);
@@ -68,14 +70,17 @@ bool CNetObj::Init() {
     switch(ret) {
     case 0:
         LOG(WARNING) << "连接" << ip << ":" << port << "超时!";
-        return false;
+        return SWR_SOCKET_TIMEOUT;
     case SOCKET_ERROR:
         LOG(ERROR) << "连接" << ip << ":" << port << "SOCKET_ERROR" << ":" << WSAGetLastError();
-        return false;
+        return SWR_CONNECT_ERR;
     default:
         LOG(INFO) << "连接" << ip << ":" << port << "成功!";
         break;
     }
+
+    nonblock = FALSE;
+    ioctlsocket(sc, FIONBIO, (unsigned long *)&nonblock);
 
     ////设置发送超时6秒
     //int timeOut = 6000;
@@ -98,40 +103,40 @@ bool CNetObj::Init() {
     reqest.command = uiCmd;
     memcpy(reqest.commandData, pwd.c_str(), strlen(pwd.c_str()));
 
-
     //发送密码验证指令
-    if (!SendCmd((unsigned char *)&reqest, uiCmdLen, bRev, &uiRevLen, &uiRet)) {
-        return false;
+    unsigned int rv = SendCmd((unsigned char *)&reqest, uiCmdLen, bRev, &uiRevLen, &uiRet);
+    if(rv != SDR_OK) {
+        return rv;
     }
 
     if (uiRet != 0) {
-        return false;
+        return SWR_LOGIN_ERR;
     }
 
     isInit = true;
 
 
-    return true;
+    return SDR_OK;
 }
 
-bool CNetObj::SendCmd(unsigned char *pcCmd, unsigned int uiCmdLen, unsigned char *pcRev, unsigned int *puiRevLen, unsigned int *puiRet) {
+unsigned int CNetObj::SendCmd(unsigned char * pcCmd, unsigned int uiCmdLen, unsigned char *pcRev, unsigned int *puiRevLen, unsigned int *puiRet) {
 
     unsigned char bRev[4096 + 32] = {0};
 
     if (send(SocketID, (const char *)pcCmd, uiCmdLen, 0) < 0)
-        return false;
+        return SWR_SOCKET_SEND_ERR;
 
     int rLen = recv(SocketID, (char *)bRev, 4096 + 32, 0);
 
     if (rLen <= 0) {
-        return false;
+        return SWR_SOCKET_RECV_ERR;
     }
 
     memcpy(puiRet, bRev + 8, 4);
     memcpy(pcRev, bRev + 12, rLen - 12);
     *puiRevLen = rLen - 12;
 
-    return true;
+    return SDR_OK;
 }
 
 bool CNetObj::IsInit() {

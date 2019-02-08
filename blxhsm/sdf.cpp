@@ -21,7 +21,6 @@
 #include <Windows.h>
 #include "typedef_exception.h"
 #include "INIParser.h"
-#include "ErrorCode.h"
 
 void LogMessage_tt(char *sFile,int nLine,unsigned int unErrCode, char *sMessage) {
 
@@ -98,8 +97,8 @@ SGD_RV __cdecl SDF_OpenDevice(SGD_HANDLE *phDeviceHandle) {
 
         CNetObj nObj(ip, port, passwd);
 
-        if (!nObj.Init()) {
-            rv = SWR_CONNECT_ERR;
+        rv = nObj.Init();
+        if (rv != SDR_OK) {
             goto END;
         }
 
@@ -114,8 +113,11 @@ END:
     return rv;
 }
 SGD_RV __cdecl SDF_CloseDevice(SGD_HANDLE hDeviceHandle) {
-    CTP.DelDeviceSessions((SGD_UINT32)hDeviceHandle);
-    return 0;
+
+    SGD_RV rv = SDR_OK;
+    if(CTP.DelDeviceSessions((SGD_UINT32)hDeviceHandle)) {
+    }
+    return rv;
 }
 
 SGD_RV __cdecl SDF_OpenSession(SGD_HANDLE hDeviceHandle, SGD_HANDLE *phSessionHandle) {

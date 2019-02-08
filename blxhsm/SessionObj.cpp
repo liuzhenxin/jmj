@@ -3,7 +3,6 @@
 #include <WinBase.h>
 //#include "log.h"
 #include <stdlib.h>
-#include "ErrorCode.h"
 
 #define random(x) (rand() % x)
 
