@@ -99,7 +99,7 @@ class CSessionObj {
     SGD_RV SDF_InternalSignEx_ECC(SGD_UINT32 uiKeyNumber, SGD_UCHAR *pucData, SGD_UINT32 uiDataLength, ECCPoint *P1, ECCSignatureEx *sign);
     SGD_RV SDF_ECCMultAdd(SGD_UINT32 k, ECCrefPrivateKey *e, ECCrefPublicKey *A, ECCrefPublicKey *B, ECCrefPublicKey *C);
     SGD_RV SDF_ECCModMultAdd(ECCrefPrivateKey *k, ECCrefPrivateKey *a, ECCrefPrivateKey *b, ECCrefPrivateKey *c);
-    SGD_RV SDF_ECCMultAdd2(SGD_HANDLE hSessionHandle, ECCrefPrivateKey *e1, ECCrefPublicKey *A1, ECCrefPrivateKey *e2, ECCrefPublicKey *A2, ECCrefPublicKey *B, ECCrefPublicKey *C);
+    SGD_RV SDF_ECCMultAdd2(ECCrefPrivateKey *e1, ECCrefPublicKey *A1, ECCrefPrivateKey *e2, ECCrefPublicKey *A2, ECCrefPublicKey *B, ECCrefPublicKey *C);
     SGD_RV SDF_InternalSignEx2_ECC(SGD_UINT32 uiISKIndex1, SGD_UINT32 uiISKIndex2, SGD_UCHAR *pucData, SGD_UINT32 uiDataLength, ECCPoint *P1, ECCSignatureEx *sign);
 
     /**/

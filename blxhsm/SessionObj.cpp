@@ -1278,7 +1278,7 @@ SGD_RV CSessionObj::SDF_ECCModMultAdd(ECCrefPrivateKey *k, ECCrefPrivateKey *a, 
     return rv;
 }
 
-SGD_RV CSessionObj::SDF_ECCMultAdd2(SGD_HANDLE hSessionHandle, ECCrefPrivateKey *e1, ECCrefPublicKey *A1, ECCrefPrivateKey *e2, ECCrefPublicKey *A2, ECCrefPublicKey *B, ECCrefPublicKey *C) {
+SGD_RV CSessionObj::SDF_ECCMultAdd2(ECCrefPrivateKey *e1, ECCrefPublicKey *A1, ECCrefPrivateKey *e2, ECCrefPublicKey *A2, ECCrefPublicKey *B, ECCrefPublicKey *C) {
 
     SGD_RV rv = SDR_OK;
     SGD_UCHAR bCmd[64] = {0};

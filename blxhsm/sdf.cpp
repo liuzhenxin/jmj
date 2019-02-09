@@ -1118,6 +1118,7 @@ SGD_RV SDF_ECCModMultAdd(SGD_HANDLE hSessionHandle, ECCrefPrivateKey *k, ECCrefP
 
 SGD_RV SDF_ECCMultAdd2(SGD_HANDLE hSessionHandle, ECCrefPrivateKey *e1, ECCrefPublicKey *A1,
                        ECCrefPrivateKey *e2, ECCrefPublicKey *A2, ECCrefPublicKey *B, ECCrefPublicKey *C) {
+
     SGD_RV rv = SDR_OK;
     try {
         CSessionObj *sObj = CTP.GetLockSession(hSessionHandle);
