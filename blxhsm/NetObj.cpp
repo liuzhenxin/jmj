@@ -9,7 +9,6 @@
 #include "sdf.h"
 
 
-
 CNetObj::CNetObj(void) {
 
     SocketID = INVALID_SOCKET;
@@ -120,6 +119,9 @@ unsigned int CNetObj::Init() {
 }
 
 unsigned int CNetObj::SendCmd(unsigned char * pcCmd, unsigned int uiCmdLen, unsigned char *pcRev, unsigned int *puiRevLen, unsigned int *puiRet) {
+
+    /*std::mutex mtx;
+    std::lock_guard<std::mutex> mtx_locker(mtx);*/
 
     unsigned char bRev[4096 + 32] = {0};
 
